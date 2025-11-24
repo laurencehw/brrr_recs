@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:pmg.org.za)",
+      "Bash(dir:*)",
+      "Bash(python download_brrr_direct.py:*)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "WebFetch(domain:www.treasury.gov.za)",
+      "WebSearch"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

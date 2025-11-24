@@ -1,0 +1,17 @@
+{
+  "fiscal_metrics": {},
+  "sector_allocations": {
+    "Finance": {
+      "amount_bn": 14.61,
+      "keyword": "revenue"
+    },
+    "Infrastructure": {
+      "amount_bn": 0.02,
+      "keyword": "infrastructure"
+    }
+  },
+  "fiscal_challenges": [],
+  "reform_priorities": [],
+  "document_date": "2025 MTBPS",
+  "extraction_note": "Automated extraction - verify key figures against source documents"
+}

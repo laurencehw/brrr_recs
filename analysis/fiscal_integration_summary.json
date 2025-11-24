@@ -1,0 +1,14 @@
+{
+  "total_recommendations": 5256,
+  "fiscally_optimal": 1063,
+  "tier_1_immediate": 1031,
+  "tier_2_near_term": 54,
+  "high_mtbps_alignment": 1569,
+  "fiscal_feasibility_distribution": {
+    "4": 1518,
+    "3": 143,
+    "2": 3087,
+    "1": 508
+  },
+  "avg_fiscal_priority_score": 6.687785388127854
+}
