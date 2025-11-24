@@ -1,0 +1,17 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.env
+.venv
+__pycache__/
+*.pyc
+.claude/
+
+# Data and reports (large)
+/brrr_reports/
+/mtbps_2025/
+*.pdf
+*.xlsx
+
+# Notebook/exports
+*.ipynb
