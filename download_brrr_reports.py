@@ -17,8 +17,10 @@ if sys.platform == 'win32':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 # Configuration
-USERNAME = "laurencew@uj.ac.za"
-PASSWORD = "Maggie2025**!!"
+USERNAME = os.getenv('PMG_USERNAME', "laurencew@uj.ac.za")
+PASSWORD = os.getenv('PMG_PASSWORD')
+if not PASSWORD:
+    print("Warning: PMG_PASSWORD environment variable not set. Authentication will fail.")
 BASE_URL = "https://pmg.org.za"
 BRRR_PAGE = "https://pmg.org.za/page/BRRR"
 
