@@ -293,12 +293,41 @@ To reproduce or update this analysis:
 
 ## Next Steps
 
+### Immediate Actions
 1. **Validation**: Expert review of top recommendations
 2. **Stakeholder Engagement**: Present to relevant ministries/departments
 3. **Implementation Planning**: Detailed project plans for Phase 1
 4. **Monitoring Setup**: Establish dashboard for tracking progress
 5. **Regular Updates**: Annual refresh as new BRRR reports are published
 
+### Future Enhancements
+
+#### Data Enrichment
+- **Economic Context Data**: Correlate recommendations with GDP, unemployment, inflation, and interest rate trends from Stats SA/SARB
+- **Load-shedding Correlation**: Map energy recommendations against Eskom load-shedding stages over time
+- **Geographic/Provincial Breakdown**: Map recommendations by province and link to provincial budget allocations
+- **Implementation Tracking**: Add columns tracking which recommendations were implemented and their outcomes
+
+#### International Benchmarking
+- Compare SA recommendations to similar emerging markets (Brazil, India, Indonesia)
+- Integrate World Bank/IMF recommendations for SA
+- Link to Doing Business/investment climate rankings over time
+
+#### Interactive Visualizations
+- Build a Streamlit/Dash dashboard for interactive exploration
+- Create timeline views correlating crises (energy, fiscal) with recommendations
+- Add Sankey diagrams showing resource flows
+
+#### NLP & Analytics Enhancements
+- Sentiment analysis of recommendations (urgent vs routine)
+- Entity extraction (departments, SOEs, programs mentioned)
+- Topic modeling to discover hidden themes beyond manual categories
+
+#### Outcome Linkages
+- Connect to Auditor General reports (implementation audits)
+- Link to Treasury budget vote outcomes
+- Track progress against National Development Plan (NDP) goals
+
 ---
 
-**Last Updated:** November 24, 2025
+**Last Updated:** December 8, 2025
