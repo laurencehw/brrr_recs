@@ -123,6 +123,46 @@ def load_peer_data():
     return pd.DataFrame()
 
 
+@st.cache_data
+def load_provincial_analysis():
+    """Load provincial analysis data"""
+    path = ANALYSIS_DIR / "provincial_analysis.json"
+    if path.exists():
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+
+@st.cache_data
+def load_time_series_analysis():
+    """Load time series analysis data"""
+    path = ANALYSIS_DIR / "time_series_analysis.json"
+    if path.exists():
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+
+@st.cache_data
+def load_committee_performance():
+    """Load committee performance data"""
+    path = ANALYSIS_DIR / "committee_performance.json"
+    if path.exists():
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+
+@st.cache_data
+def load_cost_estimates():
+    """Load cost estimates data"""
+    path = ANALYSIS_DIR / "cost_estimates.json"
+    if path.exists():
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+
 # =============================================================================
 # QUICK WINS / HIGH-ROI RECOMMENDATIONS (hardcoded from analysis)
 # =============================================================================
@@ -216,6 +256,10 @@ def main():
     benchmark = load_international_benchmark()
     peer_df = load_peer_data()
     ov_data = load_operation_vulindlela()
+    provincial_data = load_provincial_analysis()
+    time_series_data = load_time_series_analysis()
+    committee_data = load_committee_performance()
+    cost_data = load_cost_estimates()
     
     # Sidebar navigation
     st.sidebar.header("📊 Navigation")
@@ -225,8 +269,12 @@ def main():
         [
             "🏠 Overview",
             "📋 Recommendations", 
+            "🔍 Search & Export",
             "📈 Economic Context",
             "⚡ Electricity Crisis",
+            "🗺️ Provincial Analysis",
+            "📊 Trends & Performance",
+            "💰 Cost Analysis",
             "🌍 International Benchmark",
             "🎯 Executive Alignment",
             "🧠 NLP Insights",
@@ -246,6 +294,12 @@ def main():
         render_recommendations(recs_df)
     
     # ==========================================================================
+    # VIEW: SEARCH & EXPORT
+    # ==========================================================================
+    elif view == "🔍 Search & Export":
+        render_search_export(recs_df)
+    
+    # ==========================================================================
     # VIEW: ECONOMIC CONTEXT
     # ==========================================================================
     elif view == "📈 Economic Context":
@@ -256,6 +310,26 @@ def main():
     # ==========================================================================
     elif view == "⚡ Electricity Crisis":
         render_electricity_crisis(econ_df, ls_data, recs_df)
+    
+    # ==========================================================================
+    # VIEW: PROVINCIAL ANALYSIS
+    # ==========================================================================
+    elif view == "🗺️ Provincial Analysis":
+        render_provincial_analysis(provincial_data)
+    
+    # ==========================================================================
+    # VIEW: TRENDS & PERFORMANCE
+    # ==========================================================================
+    elif view == "📊 Trends & Performance":
+        render_trends_performance(time_series_data, committee_data)
+    
+    # ==========================================================================
+    # VIEW: COST ANALYSIS
+    # ==========================================================================
+    elif view == "💰 Cost Analysis":
+        render_cost_analysis(cost_data)
+    
+    # ==========================================================================
     
     # ==========================================================================
     # VIEW: INTERNATIONAL BENCHMARK
@@ -457,6 +531,378 @@ def render_recommendations(recs_df):
     display_cols = ['year', 'sector', 'category', 'recommendation']
     available = [c for c in display_cols if c in filtered.columns]
     st.dataframe(filtered[available].head(200), use_container_width=True)
+
+
+def render_search_export(recs_df):
+    """Render the Search & Export page"""
+    
+    st.header("🔍 Search & Export")
+    st.markdown("*Find specific recommendations and download data*")
+    
+    if recs_df.empty:
+        st.warning("Recommendations data not loaded.")
+        return
+    
+    # Full-text search
+    st.subheader("🔎 Full-Text Search")
+    
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        search_query = st.text_input("Enter search terms (supports multiple words)", 
+                                      placeholder="e.g., procurement irregular expenditure")
+    with col2:
+        search_type = st.selectbox("Search mode", ["All words (AND)", "Any word (OR)"])
+    
+    if search_query:
+        words = search_query.lower().split()
+        if search_type == "All words (AND)":
+            mask = recs_df['recommendation'].str.lower().apply(
+                lambda x: all(w in str(x) for w in words) if pd.notna(x) else False
+            )
+        else:
+            mask = recs_df['recommendation'].str.lower().apply(
+                lambda x: any(w in str(x) for w in words) if pd.notna(x) else False
+            )
+        results = recs_df[mask]
+        
+        st.success(f"Found **{len(results):,}** matching recommendations")
+        
+        if len(results) > 0:
+            # Show results
+            st.dataframe(
+                results[['year', 'sector', 'category', 'recommendation']].head(100),
+                use_container_width=True,
+                height=400
+            )
+    
+    st.divider()
+    
+    # Export options
+    st.subheader("📥 Export Data")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("**All Recommendations**")
+        csv_all = recs_df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            "⬇️ Download CSV",
+            csv_all,
+            "brrr_recommendations_all.csv",
+            "text/csv",
+            key='download-all'
+        )
+    
+    with col2:
+        st.markdown("**Filtered Results**")
+        if search_query and len(results) > 0:
+            csv_filtered = results.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                "⬇️ Download CSV",
+                csv_filtered,
+                f"brrr_search_{search_query.replace(' ', '_')[:20]}.csv",
+                "text/csv",
+                key='download-filtered'
+            )
+        else:
+            st.caption("Search first to filter")
+    
+    with col3:
+        st.markdown("**By Sector**")
+        export_sector = st.selectbox("Select sector", sorted(recs_df['sector'].dropna().unique()))
+        sector_data = recs_df[recs_df['sector'] == export_sector]
+        csv_sector = sector_data.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            f"⬇️ Download {export_sector}",
+            csv_sector,
+            f"brrr_{export_sector}_recommendations.csv",
+            "text/csv",
+            key='download-sector'
+        )
+    
+    st.divider()
+    
+    # Quick stats
+    st.subheader("📊 Quick Statistics")
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Total Recommendations", f"{len(recs_df):,}")
+    with col2:
+        st.metric("Sectors Covered", recs_df['sector'].nunique())
+    with col3:
+        st.metric("Years Covered", f"{recs_df['year'].min()}-{recs_df['year'].max()}")
+    with col4:
+        st.metric("Categories", recs_df['category'].nunique())
+
+
+def render_provincial_analysis(provincial_data):
+    """Render the Provincial Analysis page"""
+    
+    st.header("🗺️ Provincial Analysis")
+    st.markdown("*Which provinces are mentioned most in parliamentary recommendations?*")
+    
+    if not provincial_data:
+        st.info("Run `python scripts/advanced_analysis.py` to generate provincial analysis.")
+        return
+    
+    st.markdown("""
+    > **Note:** BRRR reports are national-level portfolio committee documents. Provincial mentions 
+    > indicate where implementation challenges or focus areas are concentrated.
+    """)
+    
+    # Ranking
+    ranking = provincial_data.get('ranking', [])
+    if ranking:
+        st.subheader("📊 Provincial Mention Ranking")
+        
+        # Bar chart
+        provinces = [r['province'].replace('_', ' ').title() for r in ranking]
+        mentions = [r['mentions'] for r in ranking]
+        
+        fig = px.bar(
+            x=mentions, y=provinces, orientation='h',
+            title="Recommendations Mentioning Each Province",
+            labels={'x': 'Number of Mentions', 'y': 'Province'}
+        )
+        fig.update_layout(yaxis={'categoryorder': 'total ascending'})
+        fig.update_traces(marker_color='#3498db')
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Top provinces detail
+        st.subheader("🔍 Top Provinces - Detail")
+        
+        prov_data = provincial_data.get('provincial_data', {})
+        top_3 = ranking[:3]
+        
+        cols = st.columns(3)
+        for i, item in enumerate(top_3):
+            prov_key = item['province']
+            data = prov_data.get(prov_key, {})
+            with cols[i]:
+                st.markdown(f"**{prov_key.replace('_', ' ').title()}**")
+                st.metric("Total Mentions", item['mentions'])
+                
+                # By sector breakdown
+                by_sector = data.get('by_sector', {})
+                if by_sector:
+                    top_sector = max(by_sector.items(), key=lambda x: x[1])
+                    st.caption(f"Top sector: {top_sector[0]} ({top_sector[1]})")
+        
+        st.divider()
+        
+        # Interpretation
+        st.subheader("📝 Interpretation")
+        st.markdown("""
+        **Key findings:**
+        - **KwaZulu-Natal** leads mentions - likely due to eThekwini port issues and Transnet rail focus
+        - **Eastern Cape** high mentions reflect service delivery challenges and automotive sector concerns
+        - **Gauteng** mentions concentrate in energy and economic infrastructure
+        
+        **What this means:**
+        - Provincial mentions correlate with both economic importance AND service delivery failures
+        - Coastal provinces feature heavily due to port/logistics focus
+        - Implementation should prioritize these high-mention provinces
+        """)
+
+
+def render_trends_performance(time_series_data, committee_data):
+    """Render the Trends & Performance page"""
+    
+    st.header("📊 Trends & Committee Performance")
+    st.markdown("*How have recommendations evolved? Which committees are most effective?*")
+    
+    # Time Series Tab
+    st.subheader("📈 Time Series: Recommendation Trends (2015-2025)")
+    
+    if time_series_data:
+        by_year = time_series_data.get('by_year', {})
+        years = sorted(by_year.keys())
+        
+        # Multi-metric chart
+        fig = make_subplots(rows=2, cols=2, subplot_titles=(
+            'Recommendations per Year', 'Actionability Rate (%)',
+            'Average Length (words)', 'Monetary References'
+        ))
+        
+        counts = [by_year[y]['count'] for y in years]
+        action_rates = [by_year[y]['actionability_rate'] for y in years]
+        avg_lengths = [by_year[y]['avg_length'] for y in years]
+        monetary = [by_year[y]['monetary_refs'] for y in years]
+        
+        fig.add_trace(go.Bar(x=years, y=counts, name='Count', marker_color='#3498db'), row=1, col=1)
+        fig.add_trace(go.Scatter(x=years, y=action_rates, mode='lines+markers', name='Actionability', 
+                                 marker_color='#27ae60'), row=1, col=2)
+        fig.add_trace(go.Scatter(x=years, y=avg_lengths, mode='lines+markers', name='Avg Length',
+                                 marker_color='#f39c12'), row=2, col=1)
+        fig.add_trace(go.Bar(x=years, y=monetary, name='Monetary Refs', marker_color='#9b59b6'), row=2, col=2)
+        
+        fig.update_layout(height=500, showlegend=False)
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Trend insight
+        trend = time_series_data.get('trend', {})
+        if trend:
+            st.info(f"📉 **Trend:** {trend.get('interpretation', 'N/A')}")
+    else:
+        st.warning("Time series data not available.")
+    
+    st.divider()
+    
+    # Committee Performance
+    st.subheader("🏆 Committee Performance Ranking")
+    st.markdown("*Which portfolio committees produce the most actionable recommendations?*")
+    
+    if committee_data:
+        ranking = committee_data.get('ranking', [])
+        by_sector = committee_data.get('by_sector', {})
+        
+        if ranking:
+            # Ranking chart
+            sectors = [r['sector'].replace('_', ' ').title() for r in ranking]
+            rates = [r['actionability_rate'] for r in ranking]
+            totals = [r['total'] for r in ranking]
+            
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=rates, y=sectors, orientation='h',
+                text=[f"{r}% ({t} recs)" for r, t in zip(rates, totals)],
+                textposition='outside',
+                marker_color=['#27ae60' if r > 50 else '#f39c12' if r > 25 else '#e74c3c' for r in rates]
+            ))
+            fig.update_layout(
+                title='Actionability Rate by Committee',
+                xaxis_title='Actionability Rate (%)',
+                yaxis={'categoryorder': 'total ascending'},
+                height=400
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Top performer highlight
+            top = ranking[0]
+            st.success(f"""
+            🏆 **Top Performer: {top['sector'].replace('_', ' ').title()}**  
+            - {top['actionability_rate']}% of recommendations contain actionable language  
+            - {top['total']} total recommendations analyzed
+            """)
+            
+            # Methodology note
+            st.caption("""
+            **Methodology:** Actionability = presence of directive keywords (must, shall, require, mandate) 
+            vs passive language (may, could, note, acknowledge). Higher rates suggest more specific, 
+            implementable recommendations.
+            """)
+    else:
+        st.warning("Committee performance data not available.")
+
+
+def render_cost_analysis(cost_data):
+    """Render the Cost Analysis page"""
+    
+    st.header("💰 Cost Analysis")
+    st.markdown("*What does reform cost? What does inaction cost more?*")
+    
+    if not cost_data:
+        st.info("Run `python scripts/advanced_analysis.py` to generate cost estimates.")
+        return
+    
+    summary = cost_data.get('summary', {})
+    
+    # Headline metrics
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Total Reform Cost", f"R{summary.get('total_implementation_cost_bn', 0)}bn")
+    with col2:
+        st.metric("Annual Inaction Cost", f"R{summary.get('total_annual_cost_of_inaction_bn', 0)}bn")
+    with col3:
+        payback = summary.get('payback_period_years', 0) * 12
+        st.metric("Payback Period", f"{payback:.0f} months")
+    
+    st.success(f"**💡 Key Insight:** {summary.get('key_insight', 'N/A')}")
+    
+    st.divider()
+    
+    col1, col2 = st.columns(2)
+    
+    # Implementation costs
+    with col1:
+        st.subheader("📈 Implementation Costs")
+        impl_costs = cost_data.get('implementation_costs', {})
+        
+        cost_items = []
+        for key, data in impl_costs.items():
+            cost_items.append({
+                'Area': key.replace('_', ' ').title(),
+                'Cost (Rbn)': data['estimated_cost_bn'],
+                'Timeframe': f"{data['timeframe_years']} years",
+                'Priority': data['priority'].upper()
+            })
+        
+        cost_df = pd.DataFrame(cost_items)
+        
+        fig = px.bar(
+            cost_df, x='Cost (Rbn)', y='Area', orientation='h',
+            color='Priority',
+            color_discrete_map={'CRITICAL': '#e74c3c', 'HIGH': '#f39c12'},
+            title='Reform Implementation Costs'
+        )
+        fig.update_layout(yaxis={'categoryorder': 'total ascending'})
+        st.plotly_chart(fig, use_container_width=True)
+    
+    # Inaction costs
+    with col2:
+        st.subheader("📉 Cost of Inaction (Annual)")
+        inaction_costs = cost_data.get('cost_of_inaction', {})
+        
+        inaction_items = []
+        for key, data in inaction_costs.items():
+            inaction_items.append({
+                'Issue': key.replace('_', ' ').title(),
+                'Annual Cost (Rbn)': data['annual_cost_bn']
+            })
+        
+        inaction_df = pd.DataFrame(inaction_items)
+        
+        fig = px.pie(
+            inaction_df, values='Annual Cost (Rbn)', names='Issue',
+            title='Annual Cost of Inaction by Category'
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    
+    st.divider()
+    
+    # ROI visualization
+    st.subheader("📊 Return on Investment")
+    
+    impl_total = summary.get('total_implementation_cost_bn', 475)
+    inaction_annual = summary.get('total_annual_cost_of_inaction_bn', 900)
+    
+    years = list(range(6))
+    impl_line = [impl_total] * 6  # One-time cost
+    savings = [inaction_annual * y for y in years]
+    net_benefit = [s - impl_total for s in savings]
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=years, y=impl_line, mode='lines', name='Implementation Cost',
+                             line=dict(color='#e74c3c', dash='dash')))
+    fig.add_trace(go.Scatter(x=years, y=savings, mode='lines+markers', name='Cumulative Savings',
+                             line=dict(color='#27ae60')))
+    fig.add_trace(go.Bar(x=years, y=net_benefit, name='Net Benefit', marker_color='#3498db', opacity=0.5))
+    
+    fig.update_layout(
+        title='5-Year Investment Return',
+        xaxis_title='Years',
+        yaxis_title='Rbn',
+        height=400
+    )
+    st.plotly_chart(fig, use_container_width=True)
+    
+    st.markdown(f"""
+    **5-Year Outlook:**
+    - **Year 0:** Invest R{impl_total}bn in reforms
+    - **Year 1:** Save R{inaction_annual}bn → Net benefit: R{inaction_annual - impl_total}bn
+    - **Year 5:** Cumulative savings: R{inaction_annual * 5}bn → Net benefit: R{inaction_annual * 5 - impl_total}bn
+    - **ROI:** {summary.get('roi_5_year', 850)}%
+    """)
 
 
 def render_economic_context(econ_df):

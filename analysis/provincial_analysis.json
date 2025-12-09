@@ -1,0 +1,243 @@
+{
+  "provincial_data": {
+    "gauteng": {
+      "mentions": 35,
+      "by_sector": {
+        "energy": 2,
+        "labour": 4,
+        "finance": 9,
+        "science_tech": 3,
+        "infrastructure": 15,
+        "trade": 2
+      },
+      "by_year": {
+        "2021": 6,
+        "2022": 6,
+        "2019": 3,
+        "2023": 8,
+        "2015": 1,
+        "2020": 7,
+        "2024": 2,
+        "2025": 2
+      },
+      "sample_recommendations": [
+        "5. The Committee congratulated the SDT and the SADPMR for having relocated to the Gauteng Industrial Development Zone (GIDZ) precinct.",
+        "5. The Committee congratulated the SDT and the SADPMR for having relocated to the Gauteng Industrial Development Zone (GIDZ) precinct.",
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10"
+      ]
+    },
+    "western_cape": {
+      "mentions": 29,
+      "by_sector": {
+        "labour": 6,
+        "finance": 10,
+        "science_tech": 7,
+        "infrastructure": 6
+      },
+      "by_year": {
+        "2019": 4,
+        "2023": 4,
+        "2021": 4,
+        "2022": 9,
+        "2024": 6,
+        "2020": 2
+      },
+      "sample_recommendations": [
+        "3. A contract for supply of Hospital Linen was also concluded with the Department of Health Western Cape",
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10",
+        "3. A contract for supply of Hospital Linen was also concluded with the Department of Health Western Cape"
+      ]
+    },
+    "kwazulu_natal": {
+      "mentions": 42,
+      "by_sector": {
+        "labour": 4,
+        "finance": 23,
+        "science_tech": 2,
+        "infrastructure": 9,
+        "trade": 4
+      },
+      "by_year": {
+        "2019": 3,
+        "2021": 5,
+        "2022": 5,
+        "2015": 1,
+        "2018": 4,
+        "2020": 7,
+        "2023": 14,
+        "2024": 1,
+        "2025": 1,
+        "2016": 1
+      },
+      "sample_recommendations": [
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10",
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10",
+        "114 in Region 3 (KZN, EC, MP) Productivity champions are to work with Productivity SA practitioners to facilitate productivity in businesses that Productivity SA intervenes in, to ensure that those in"
+      ]
+    },
+    "eastern_cape": {
+      "mentions": 36,
+      "by_sector": {
+        "labour": 4,
+        "finance": 26,
+        "infrastructure": 3,
+        "trade": 3
+      },
+      "by_year": {
+        "2019": 6,
+        "2017": 4,
+        "2020": 3,
+        "2021": 9,
+        "2023": 12,
+        "2025": 1,
+        "2022": 1
+      },
+      "sample_recommendations": [
+        "2. Contracts were concluded with the National Department of Basic Education for new school\u2019s furniture and the Eastern Cape Provincial Education Department",
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10",
+        "2. Contracts were concluded with the National Department of Basic Education for new school\u2019s furniture and the Eastern Cape Provincial Education Department"
+      ]
+    },
+    "free_state": {
+      "mentions": 4,
+      "by_sector": {
+        "labour": 2,
+        "finance": 2
+      },
+      "by_year": {
+        "2019": 3,
+        "2025": 1
+      },
+      "sample_recommendations": [
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10",
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10",
+        "15 of 2002). Its mandate is to promote equitable ownership of agricultural land, support agrarian transformation, and contribute to food security by financing and facilitating the participation of his"
+      ]
+    },
+    "mpumalanga": {
+      "mentions": 15,
+      "by_sector": {
+        "labour": 3,
+        "finance": 11,
+        "trade": 1
+      },
+      "by_year": {
+        "2019": 2,
+        "2024": 1,
+        "2015": 1,
+        "2018": 4,
+        "2021": 6,
+        "2025": 1
+      },
+      "sample_recommendations": [
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10",
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10",
+        "That Public Employment Services branch of the Department is restructured and repurposed for job creation, including interdepartmental and private sector activities. \u2022 The process of establishing the S"
+      ]
+    },
+    "limpopo": {
+      "mentions": 27,
+      "by_sector": {
+        "labour": 4,
+        "finance": 18,
+        "science_tech": 1,
+        "infrastructure": 3,
+        "trade": 1
+      },
+      "by_year": {
+        "2019": 7,
+        "2018": 4,
+        "2020": 3,
+        "2021": 3,
+        "2022": 3,
+        "2023": 2,
+        "2025": 4,
+        "2024": 1
+      },
+      "sample_recommendations": [
+        "7. Creation of new organizational structure for the Limpopo factory comprising of: (i) Factory manager SR 10 (ii) 3 instructors (Wood, Steel and Textile) at SR 8 (iii) HR senior admin officer at SR 9 ",
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10",
+        "7. Creation of new organizational structure for the Limpopo factory comprising of: (i) Factory manager SR 10 (ii) 3 instructors (Wood, Steel and Textile) at SR 8 (iii) HR senior admin officer at SR 9 "
+      ]
+    },
+    "north_west": {
+      "mentions": 10,
+      "by_sector": {
+        "energy": 2,
+        "labour": 4,
+        "finance": 2,
+        "science_tech": 2
+      },
+      "by_year": {
+        "2021": 1,
+        "2022": 1,
+        "2019": 2,
+        "2023": 4,
+        "2024": 2
+      },
+      "sample_recommendations": [
+        "19. Regarding the NNR, the Committee noted that the entity\u2019s CEO had resigned to become a Vice Chancellor of North West University, which might have a negative effect on the leadership and management ",
+        "19. Regarding the NNR, the Committee noted that the entity\u2019s CEO had resigned to become a Vice Chancellor of North West University, which might have a negative effect on the leadership and management ",
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10"
+      ]
+    },
+    "northern_cape": {
+      "mentions": 16,
+      "by_sector": {
+        "labour": 2,
+        "finance": 5,
+        "science_tech": 9
+      },
+      "by_year": {
+        "2019": 4,
+        "2015": 1,
+        "2025": 2,
+        "2024": 9
+      },
+      "sample_recommendations": [
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10",
+        "1. Turnaround Solutions 3 0 0% Overall Performance 13 7 54% Source: Presentation to the PC on Employment and Labour dated 18 September 2019 Table 16 above reflects that the Productivity SA achieved 10",
+        "2014 Revised Fiscal Framework Differentiate strategic and non-strategic assets The National Treasury needs to be very clear about the criteria it uses to define non- strategic assets and the terms of "
+      ]
+    }
+  },
+  "ranking": [
+    {
+      "province": "kwazulu_natal",
+      "mentions": 42
+    },
+    {
+      "province": "eastern_cape",
+      "mentions": 36
+    },
+    {
+      "province": "gauteng",
+      "mentions": 35
+    },
+    {
+      "province": "western_cape",
+      "mentions": 29
+    },
+    {
+      "province": "limpopo",
+      "mentions": 27
+    },
+    {
+      "province": "northern_cape",
+      "mentions": 16
+    },
+    {
+      "province": "mpumalanga",
+      "mentions": 15
+    },
+    {
+      "province": "north_west",
+      "mentions": 10
+    },
+    {
+      "province": "free_state",
+      "mentions": 4
+    }
+  ],
+  "note": "BRRR reports are national-level; provincial mentions indicate specific implementation focus"
+}

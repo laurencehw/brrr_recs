@@ -1,0 +1,86 @@
+{
+  "implementation_costs": {
+    "energy_sector": {
+      "description": "Grid infrastructure, renewable IPP support, Eskom unbundling",
+      "estimated_cost_bn": 150,
+      "timeframe_years": 5,
+      "source": "IRP 2019, Eskom recovery plan",
+      "priority": "critical"
+    },
+    "infrastructure": {
+      "description": "Water, roads, rail rehabilitation (Transnet)",
+      "estimated_cost_bn": 200,
+      "timeframe_years": 10,
+      "source": "Infrastructure Fund estimates",
+      "priority": "critical"
+    },
+    "skills_development": {
+      "description": "TVET expansion, artisan training, digital skills",
+      "estimated_cost_bn": 25,
+      "timeframe_years": 5,
+      "source": "DHET estimates, SETAs",
+      "priority": "high"
+    },
+    "public_service_reform": {
+      "description": "Filling critical vacancies, performance management",
+      "estimated_cost_bn": 15,
+      "timeframe_years": 3,
+      "source": "DPSA, National Treasury estimates",
+      "priority": "high"
+    },
+    "procurement_reform": {
+      "description": "e-Tender platform, central procurement, supplier development",
+      "estimated_cost_bn": 5,
+      "timeframe_years": 3,
+      "source": "National Treasury",
+      "priority": "high"
+    },
+    "municipal_support": {
+      "description": "Infrastructure grants, capacity building, debt relief",
+      "estimated_cost_bn": 80,
+      "timeframe_years": 5,
+      "source": "COGTA, fiscal framework",
+      "priority": "critical"
+    }
+  },
+  "cost_of_inaction": {
+    "load_shedding": {
+      "description": "GDP loss from load-shedding (Stage 4+ average)",
+      "annual_cost_bn": 300,
+      "cumulative_since_2007_bn": 2100,
+      "source": "CSIR, SARB estimates"
+    },
+    "port_inefficiency": {
+      "description": "Trade losses from Transnet port/rail failures",
+      "annual_cost_bn": 50,
+      "source": "Minerals Council, exporters association"
+    },
+    "irregular_expenditure": {
+      "description": "Funds lost/wasted through non-compliance",
+      "annual_cost_bn": 100,
+      "source": "Auditor-General reports"
+    },
+    "unemployment": {
+      "description": "Lost output from 8M unemployed (at median wage)",
+      "annual_cost_bn": 400,
+      "source": "Stats SA, SARB calculations"
+    },
+    "skills_mismatch": {
+      "description": "Productivity loss from unfilled technical positions",
+      "annual_cost_bn": 30,
+      "source": "NPC, HRDC estimates"
+    },
+    "water_crisis": {
+      "description": "Lost agricultural output, infrastructure decay",
+      "annual_cost_bn": 20,
+      "source": "DWS, AgriSA"
+    }
+  },
+  "summary": {
+    "total_implementation_cost_bn": 475,
+    "total_annual_cost_of_inaction_bn": 900,
+    "payback_period_years": 0.53,
+    "roi_5_year": 850,
+    "key_insight": "The cost of implementing ALL major reforms is less than 6 months of inaction costs"
+  }
+}

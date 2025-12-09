@@ -1,0 +1,309 @@
+{
+  "by_year": {
+    "2015": {
+      "count": 167,
+      "sectors": {
+        "finance": 167
+      },
+      "categories": {
+        "Governance/Accountability": 50,
+        "Infrastructure": 6,
+        "Other": 42,
+        "Budget/Fiscal": 36,
+        "Monitoring & Evaluation": 10,
+        "Service Delivery": 7,
+        "Policy/Legislation": 14,
+        "Capacity Building": 2
+      },
+      "avg_length": 231.8,
+      "actionability": {
+        "high": 25,
+        "medium": 22,
+        "low": 11
+      },
+      "monetary_refs": 18,
+      "actionability_rate": 28.1
+    },
+    "2016": {
+      "count": 133,
+      "sectors": {
+        "infrastructure": 1,
+        "trade": 132
+      },
+      "categories": {
+        "Budget/Fiscal": 8,
+        "Policy/Legislation": 34,
+        "Other": 64,
+        "Monitoring & Evaluation": 3,
+        "Capacity Building": 14,
+        "Service Delivery": 2,
+        "Governance/Accountability": 6,
+        "Infrastructure": 2
+      },
+      "avg_length": 178.4,
+      "actionability": {
+        "high": 10,
+        "medium": 20,
+        "low": 4
+      },
+      "monetary_refs": 5,
+      "actionability_rate": 22.6
+    },
+    "2017": {
+      "count": 160,
+      "sectors": {
+        "energy": 76,
+        "finance": 84
+      },
+      "categories": {
+        "Monitoring & Evaluation": 8,
+        "Other": 23,
+        "Budget/Fiscal": 86,
+        "Policy/Legislation": 11,
+        "Capacity Building": 8,
+        "Governance/Accountability": 20,
+        "Infrastructure": 4
+      },
+      "avg_length": 1234.4,
+      "actionability": {
+        "high": 50,
+        "medium": 60,
+        "low": 2
+      },
+      "monetary_refs": 29,
+      "actionability_rate": 68.8
+    },
+    "2018": {
+      "count": 122,
+      "sectors": {
+        "finance": 122
+      },
+      "categories": {
+        "Budget/Fiscal": 64,
+        "Service Delivery": 8,
+        "Other": 24,
+        "Capacity Building": 6,
+        "Infrastructure": 4,
+        "Policy/Legislation": 8,
+        "Governance/Accountability": 8
+      },
+      "avg_length": 1279.2,
+      "actionability": {
+        "high": 44,
+        "medium": 34,
+        "low": 0
+      },
+      "monetary_refs": 16,
+      "actionability_rate": 63.9
+    },
+    "2019": {
+      "count": 786,
+      "sectors": {
+        "labour": 549,
+        "finance": 40,
+        "infrastructure": 109,
+        "trade": 88
+      },
+      "categories": {
+        "Policy/Legislation": 99,
+        "Other": 310,
+        "Governance/Accountability": 70,
+        "Capacity Building": 54,
+        "Budget/Fiscal": 162,
+        "Monitoring & Evaluation": 22,
+        "Service Delivery": 48,
+        "Infrastructure": 18,
+        "Institutional Reform": 3
+      },
+      "avg_length": 372.5,
+      "actionability": {
+        "high": 95,
+        "medium": 86,
+        "low": 17
+      },
+      "monetary_refs": 250,
+      "actionability_rate": 23.0
+    },
+    "2020": {
+      "count": 328,
+      "sectors": {
+        "finance": 107,
+        "infrastructure": 221
+      },
+      "categories": {
+        "Budget/Fiscal": 80,
+        "Governance/Accountability": 19,
+        "Monitoring & Evaluation": 3,
+        "Policy/Legislation": 29,
+        "Infrastructure": 37,
+        "Other": 129,
+        "Capacity Building": 17,
+        "Service Delivery": 8,
+        "Institutional Reform": 6
+      },
+      "avg_length": 466.8,
+      "actionability": {
+        "high": 63,
+        "medium": 40,
+        "low": 3
+      },
+      "monetary_refs": 94,
+      "actionability_rate": 31.4
+    },
+    "2021": {
+      "count": 708,
+      "sectors": {
+        "energy": 169,
+        "labour": 30,
+        "finance": 38,
+        "science_tech": 118,
+        "infrastructure": 221,
+        "trade": 132
+      },
+      "categories": {
+        "Monitoring & Evaluation": 20,
+        "Policy/Legislation": 89,
+        "Other": 324,
+        "Capacity Building": 59,
+        "Governance/Accountability": 52,
+        "Budget/Fiscal": 100,
+        "Service Delivery": 24,
+        "Infrastructure": 31,
+        "Institutional Reform": 9
+      },
+      "avg_length": 413.3,
+      "actionability": {
+        "high": 75,
+        "medium": 102,
+        "low": 37
+      },
+      "monetary_refs": 206,
+      "actionability_rate": 25.0
+    },
+    "2022": {
+      "count": 636,
+      "sectors": {
+        "energy": 169,
+        "labour": 30,
+        "finance": 40,
+        "science_tech": 44,
+        "infrastructure": 221,
+        "trade": 132
+      },
+      "categories": {
+        "Monitoring & Evaluation": 17,
+        "Policy/Legislation": 82,
+        "Other": 294,
+        "Capacity Building": 39,
+        "Governance/Accountability": 46,
+        "Budget/Fiscal": 93,
+        "Service Delivery": 25,
+        "Infrastructure": 31,
+        "Institutional Reform": 9
+      },
+      "avg_length": 451.6,
+      "actionability": {
+        "high": 69,
+        "medium": 89,
+        "low": 35
+      },
+      "monetary_refs": 173,
+      "actionability_rate": 24.8
+    },
+    "2023": {
+      "count": 607,
+      "sectors": {
+        "energy": 4,
+        "labour": 75,
+        "finance": 83,
+        "science_tech": 159,
+        "infrastructure": 109,
+        "trade": 177
+      },
+      "categories": {
+        "Other": 269,
+        "Policy/Legislation": 48,
+        "Budget/Fiscal": 147,
+        "Governance/Accountability": 21,
+        "Service Delivery": 23,
+        "Infrastructure": 21,
+        "Capacity Building": 53,
+        "Monitoring & Evaluation": 18,
+        "Institutional Reform": 7
+      },
+      "avg_length": 467.2,
+      "actionability": {
+        "high": 99,
+        "medium": 77,
+        "low": 12
+      },
+      "monetary_refs": 312,
+      "actionability_rate": 29.0
+    },
+    "2024": {
+      "count": 1213,
+      "sectors": {
+        "energy": 4,
+        "labour": 43,
+        "finance": 23,
+        "science_tech": 620,
+        "infrastructure": 10,
+        "trade": 513
+      },
+      "categories": {
+        "Other": 516,
+        "Governance/Accountability": 96,
+        "Service Delivery": 30,
+        "Policy/Legislation": 170,
+        "Budget/Fiscal": 195,
+        "Monitoring & Evaluation": 32,
+        "Capacity Building": 144,
+        "Infrastructure": 20,
+        "Institutional Reform": 10
+      },
+      "avg_length": 208.8,
+      "actionability": {
+        "high": 98,
+        "medium": 237,
+        "low": 65
+      },
+      "monetary_refs": 303,
+      "actionability_rate": 27.6
+    },
+    "2025": {
+      "count": 396,
+      "sectors": {
+        "energy": 8,
+        "labour": 72,
+        "finance": 40,
+        "science_tech": 85,
+        "infrastructure": 21,
+        "trade": 170
+      },
+      "categories": {
+        "Other": 135,
+        "Budget/Fiscal": 85,
+        "Governance/Accountability": 54,
+        "Capacity Building": 33,
+        "Service Delivery": 16,
+        "Monitoring & Evaluation": 13,
+        "Policy/Legislation": 40,
+        "Infrastructure": 12,
+        "Institutional Reform": 8
+      },
+      "avg_length": 608.8,
+      "actionability": {
+        "high": 85,
+        "medium": 65,
+        "low": 17
+      },
+      "monetary_refs": 151,
+      "actionability_rate": 37.9
+    }
+  },
+  "trend": {
+    "direction": "decreasing",
+    "change_pct": -20.9,
+    "interpretation": "Actionability has been decreasing (-20.9% change from early to late period)"
+  }
+}

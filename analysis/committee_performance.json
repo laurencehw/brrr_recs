@@ -1,0 +1,264 @@
+{
+  "by_sector": {
+    "energy": {
+      "total_recommendations": 430,
+      "by_year": {
+        "2017": 76,
+        "2021": 169,
+        "2022": 169,
+        "2023": 4,
+        "2024": 4,
+        "2025": 8
+      },
+      "by_category": {
+        "Monitoring & Evaluation": 28,
+        "Other": 203,
+        "Budget/Fiscal": 58,
+        "Policy/Legislation": 41,
+        "Capacity Building": 24,
+        "Governance/Accountability": 52,
+        "Service Delivery": 16,
+        "Infrastructure": 2,
+        "Institutional Reform": 6
+      },
+      "actionability": {
+        "high": 32,
+        "medium": 86,
+        "low": 312
+      },
+      "actionability_rate": 27.4,
+      "avg_length": 216.4,
+      "monetary_refs": 67,
+      "monetary_ref_rate": 15.6,
+      "sample_high_actionability": [
+        "453 000). Furthermore, due to the inability to obtain sufficient appropriate audit evidence for the D&D on stage 1 liability, AGSA was unable to determine by alternative means, whether any adjustments are required to the D&D on stage 1 asset stated at R2 593 856 000 (2022: R3 222 453 000).7",
+        "7 Ibid above six (6) entities successfully mastered what is required to attain a clean audit or good governance.",
+        "That the Department should ensure continuous improvement on the definition of performance measures \u2013 to ensure meaningful performance monitoring and achievement of mandate. That the Department should enhance mechanism to monitor generation capacity. The executive authority in contracting with the ac"
+      ],
+      "actionability_rank": 3
+    },
+    "labour": {
+      "total_recommendations": 799,
+      "by_year": {
+        "2019": 549,
+        "2021": 30,
+        "2022": 30,
+        "2023": 75,
+        "2024": 43,
+        "2025": 72
+      },
+      "by_category": {
+        "Policy/Legislation": 88,
+        "Other": 320,
+        "Governance/Accountability": 78,
+        "Capacity Building": 37,
+        "Budget/Fiscal": 177,
+        "Monitoring & Evaluation": 26,
+        "Service Delivery": 65,
+        "Infrastructure": 8
+      },
+      "actionability": {
+        "high": 99,
+        "medium": 92,
+        "low": 608
+      },
+      "actionability_rate": 23.9,
+      "avg_length": 375.0,
+      "monetary_refs": 285,
+      "monetary_ref_rate": 35.7,
+      "sample_high_actionability": [
+        "1. The mandate of the Department of Employment and Labour The Department derives its mandate from the Constitution and gives effect thereto through a number of Acts which regulate employment and labour matters in South Africa. Such legislation includes the following:",
+        "\u2022 National Minimum Wage Act (2018). The mandate of the Department is to regulate the labour market through policies and programmes developed in consultation with social partners, which are aimed at:",
+        "\u2022 Section 28, to ensure that children are protected from exploitative labour practices and not required or permitted to perform work or services that are inappropriate for a person of that child\u2019s age or their wellbeing, education, physical or mental health or spiritual, moral or social development "
+      ],
+      "actionability_rank": 4
+    },
+    "finance": {
+      "total_recommendations": 744,
+      "by_year": {
+        "2015": 167,
+        "2017": 84,
+        "2018": 122,
+        "2019": 40,
+        "2020": 107,
+        "2021": 38,
+        "2022": 40,
+        "2023": 83,
+        "2024": 23,
+        "2025": 40
+      },
+      "by_category": {
+        "Governance/Accountability": 83,
+        "Infrastructure": 26,
+        "Other": 108,
+        "Budget/Fiscal": 441,
+        "Monitoring & Evaluation": 13,
+        "Service Delivery": 16,
+        "Policy/Legislation": 37,
+        "Capacity Building": 20
+      },
+      "actionability": {
+        "high": 276,
+        "medium": 203,
+        "low": 265
+      },
+      "actionability_rate": 64.4,
+      "avg_length": 1473.8,
+      "monetary_refs": 263,
+      "monetary_ref_rate": 35.3,
+      "sample_high_actionability": [
+        "that the license support and maintenance fees are paid annually to ensure that the IFMS project has automatic access to updated versions of licenses and software and security patches, updates and specialised technical problem solving which would be required in the full implementation of the IFMS.",
+        "that the SITA Act required government entities to procure goods and services through SITA.",
+        "that the entities that received clean audits achieved between 69% and 83% of their core mandate targets."
+      ],
+      "actionability_rank": 1
+    },
+    "science_tech": {
+      "total_recommendations": 1026,
+      "by_year": {
+        "2021": 118,
+        "2022": 44,
+        "2023": 159,
+        "2024": 620,
+        "2025": 85
+      },
+      "by_category": {
+        "Other": 422,
+        "Capacity Building": 174,
+        "Budget/Fiscal": 160,
+        "Policy/Legislation": 66,
+        "Service Delivery": 39,
+        "Governance/Accountability": 112,
+        "Monitoring & Evaluation": 38,
+        "Infrastructure": 14,
+        "Institutional Reform": 1
+      },
+      "actionability": {
+        "high": 92,
+        "medium": 216,
+        "low": 718
+      },
+      "actionability_rate": 30.0,
+      "avg_length": 193.1,
+      "monetary_refs": 331,
+      "monetary_ref_rate": 32.3,
+      "sample_high_actionability": [
+        "473 995 99.6% Source: DHET (2021/22 Annual Report The Department\u2019s total final appropriation for the 2021/22 financial year amounted to R116,90 billion, comprising of R97,88 billion of voted funds and R19,01 billion from direct charges against the National Revenue Fund. The budget excludes revenue a",
+        "14 700). The Department reported that the 80 per cent attendance requirement for admission into examinations was waivered in the 2020 academic year, which could have led to lower attendance of classes by students and therefore poor performance \u2022 Number (13 286) of TVET college students completing NC",
+        "103 115). \u2022 Number (21 500) of learners entering artisanal programmes annually (achieved 10 302) \u2022 Number (19 500) of artisans found competent annually (achieved 15 107). \u2022 Number (114 032) of learners who completed skulls programmes annually (achieved 98 908). \u2022 Percentage (95 per cent) of SETAs th"
+      ],
+      "actionability_rank": 2
+    },
+    "infrastructure": {
+      "total_recommendations": 913,
+      "by_year": {
+        "2016": 1,
+        "2019": 109,
+        "2020": 221,
+        "2021": 221,
+        "2022": 221,
+        "2023": 109,
+        "2024": 10,
+        "2025": 21
+      },
+      "by_category": {
+        "Budget/Fiscal": 97,
+        "Policy/Legislation": 103,
+        "Capacity Building": 65,
+        "Monitoring & Evaluation": 9,
+        "Governance/Accountability": 73,
+        "Other": 401,
+        "Infrastructure": 107,
+        "Service Delivery": 32,
+        "Institutional Reform": 26
+      },
+      "actionability": {
+        "high": 98,
+        "medium": 103,
+        "low": 712
+      },
+      "actionability_rate": 22.0,
+      "avg_length": 276.1,
+      "monetary_refs": 257,
+      "monetary_ref_rate": 28.1,
+      "sample_high_actionability": [
+        "10. RECOMMENDATIONS The committee recommends that the Minister ensure that the department provide reports as follows: 10.1. A full report on internal and independent investigations into leases, litigation related to leases, and the consequence management processes that the department has initiated t",
+        "5 See the effects of this as part of the legal mandate of the DPWI below that provides an analysis of the alignment of the Strategic Plan, Annual Performance Plan (APP) and the Annual Reports (AR). 3",
+        "6 Ministerial advisors, support staff, in combination with the Deputy Minister and support staff, functions as the Office of the Minister. Often when the Minister and Deputy Minister are unavailable, the advisory and support staff of the Minister and Deputy Minister must keep the executive authority"
+      ],
+      "actionability_rank": 5
+    },
+    "trade": {
+      "total_recommendations": 1344,
+      "by_year": {
+        "2016": 132,
+        "2019": 88,
+        "2021": 132,
+        "2022": 132,
+        "2023": 177,
+        "2024": 513,
+        "2025": 170
+      },
+      "by_category": {
+        "Policy/Legislation": 289,
+        "Other": 676,
+        "Monitoring & Evaluation": 32,
+        "Capacity Building": 109,
+        "Service Delivery": 23,
+        "Governance/Accountability": 44,
+        "Budget/Fiscal": 123,
+        "Infrastructure": 29,
+        "Institutional Reform": 19
+      },
+      "actionability": {
+        "high": 116,
+        "medium": 132,
+        "low": 1096
+      },
+      "actionability_rate": 18.5,
+      "avg_length": 208.7,
+      "monetary_refs": 354,
+      "monetary_ref_rate": 26.3,
+      "sample_high_actionability": [
+        "that the DTIC, as well as its entities, are adequately funded to fulfil their respective mandates.",
+        "that contribute towards fulfilling its mandate (see Figure 1 above).",
+        "that it was not that the DTIC policies were failing, but that the scale of the economic challenge facing South Africa requires more investment."
+      ],
+      "actionability_rank": 6
+    }
+  },
+  "ranking": [
+    {
+      "sector": "finance",
+      "actionability_rate": 64.4,
+      "total": 744
+    },
+    {
+      "sector": "science_tech",
+      "actionability_rate": 30.0,
+      "total": 1026
+    },
+    {
+      "sector": "energy",
+      "actionability_rate": 27.4,
+      "total": 430
+    },
+    {
+      "sector": "labour",
+      "actionability_rate": 23.9,
+      "total": 799
+    },
+    {
+      "sector": "infrastructure",
+      "actionability_rate": 22.0,
+      "total": 913
+    },
+    {
+      "sector": "trade",
+      "actionability_rate": 18.5,
+      "total": 1344
+    }
+  ],
+  "top_performer": "finance",
+  "methodology": "Actionability based on presence of directive keywords (must, shall, require) vs passive (may, could, note)"
+}
