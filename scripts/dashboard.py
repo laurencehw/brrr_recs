@@ -275,6 +275,7 @@ def main():
             "🗺️ Provincial Analysis",
             "📊 Trends & Performance",
             "💰 Cost Analysis",
+            "📝 Policy Briefs",
             "🌍 International Benchmark",
             "🎯 Executive Alignment",
             "🧠 NLP Insights",
@@ -330,6 +331,10 @@ def main():
         render_cost_analysis(cost_data)
     
     # ==========================================================================
+    # VIEW: POLICY BRIEF GENERATOR
+    # ==========================================================================
+    elif view == "📝 Policy Briefs":
+        render_policy_briefs(recs_df, committee_data, cost_data)
     
     # ==========================================================================
     # VIEW: INTERNATIONAL BENCHMARK
@@ -903,6 +908,168 @@ def render_cost_analysis(cost_data):
     - **Year 5:** Cumulative savings: R{inaction_annual * 5}bn → Net benefit: R{inaction_annual * 5 - impl_total}bn
     - **ROI:** {summary.get('roi_5_year', 850)}%
     """)
+
+
+def render_policy_briefs(recs_df, committee_data, cost_data):
+    """Render the Policy Brief Generator page"""
+    
+    st.header("📝 Policy Brief Generator")
+    st.markdown("*Generate concise 2-page policy briefs by sector*")
+    
+    if recs_df.empty:
+        st.warning("Recommendations data not loaded.")
+        return
+    
+    # Sector selection
+    sectors = sorted(recs_df['sector'].dropna().unique())
+    selected_sector = st.selectbox("Select Sector", sectors, format_func=lambda x: x.replace('_', ' ').title())
+    
+    if st.button("🔄 Generate Policy Brief", type="primary"):
+        generate_policy_brief(selected_sector, recs_df, committee_data, cost_data)
+
+
+def generate_policy_brief(sector, recs_df, committee_data, cost_data):
+    """Generate a downloadable policy brief for a sector"""
+    
+    # Filter data
+    sector_recs = recs_df[recs_df['sector'] == sector]
+    sector_name = sector.replace('_', ' ').title()
+    
+    # Get committee stats
+    sector_stats = committee_data.get('by_sector', {}).get(sector, {}) if committee_data else {}
+    
+    # Count by category
+    category_counts = sector_recs['category'].value_counts().to_dict()
+    
+    # Get recent recommendations (last 3 years)
+    recent = sector_recs[sector_recs['year'] >= 2022]
+    
+    # Find top recurring themes (simple word frequency)
+    all_text = ' '.join(sector_recs['recommendation'].dropna().astype(str))
+    theme_keywords = ['capacity', 'funding', 'implementation', 'monitoring', 'accountability', 
+                     'procurement', 'vacancies', 'infrastructure', 'skills', 'compliance']
+    theme_counts = {kw: all_text.lower().count(kw) for kw in theme_keywords}
+    top_themes = sorted(theme_counts.items(), key=lambda x: -x[1])[:5]
+    
+    # Generate brief content
+    st.subheader(f"📄 Policy Brief: {sector_name}")
+    
+    brief_content = f"""
+# POLICY BRIEF: {sector_name.upper()}
+## South African Parliamentary Recommendations Analysis (2015-2025)
+
+---
+
+### EXECUTIVE SUMMARY
+
+This brief summarizes **{len(sector_recs):,} parliamentary recommendations** from the Portfolio Committee on {sector_name} 
+over the past decade. These recommendations emerged from Budget Review and Recommendation Reports (BRRRs)—the formal 
+mechanism through which Parliament exercises financial oversight of government departments.
+
+**Key Statistics:**
+- Total Recommendations: {len(sector_recs):,}
+- Actionability Rate: {sector_stats.get('actionability_rate', 'N/A')}%
+- Years Covered: {sector_recs['year'].min()}-{sector_recs['year'].max()}
+- Most Common Category: {max(category_counts.items(), key=lambda x: x[1])[0] if category_counts else 'N/A'}
+
+---
+
+### TOP RECURRING THEMES
+
+The following issues appear most frequently in recommendations:
+
+| Theme | Frequency |
+|-------|-----------|
+"""
+    for theme, count in top_themes:
+        brief_content += f"| {theme.title()} | {count} mentions |\n"
+    
+    brief_content += f"""
+---
+
+### CATEGORY BREAKDOWN
+
+| Category | Count | % of Total |
+|----------|-------|------------|
+"""
+    for cat, count in sorted(category_counts.items(), key=lambda x: -x[1])[:6]:
+        pct = (count / len(sector_recs)) * 100
+        brief_content += f"| {cat} | {count} | {pct:.1f}% |\n"
+    
+    brief_content += f"""
+---
+
+### RECENT PRIORITY RECOMMENDATIONS (2022-2025)
+
+The most recent parliamentary recommendations for {sector_name} include:
+
+"""
+    for i, (_, row) in enumerate(recent.head(5).iterrows(), 1):
+        rec_text = str(row['recommendation'])[:200]
+        if len(str(row['recommendation'])) > 200:
+            rec_text += "..."
+        brief_content += f"{i}. **[{row.get('year', 'N/A')}]** {rec_text}\n\n"
+    
+    brief_content += f"""
+---
+
+### IMPLEMENTATION STATUS
+
+**Estimated Implementation Needs:**
+"""
+    
+    # Add cost estimates if available
+    if cost_data:
+        impl_costs = cost_data.get('implementation_costs', {})
+        sector_cost_map = {
+            'energy': 'energy_sector',
+            'infrastructure': 'infrastructure',
+            'labour': 'skills_development',
+            'finance': 'procurement_reform',
+            'trade': 'infrastructure',
+            'science_tech': 'skills_development'
+        }
+        
+        if sector in sector_cost_map and sector_cost_map[sector] in impl_costs:
+            cost_info = impl_costs[sector_cost_map[sector]]
+            brief_content += f"""
+- Estimated Cost: R{cost_info['estimated_cost_bn']}bn over {cost_info['timeframe_years']} years
+- Priority: {cost_info['priority'].upper()}
+- Description: {cost_info['description']}
+"""
+    
+    brief_content += f"""
+---
+
+### RECOMMENDATIONS FOR POLICYMAKERS
+
+Based on the decade of parliamentary oversight:
+
+1. **Address recurring issues**: The same themes appear year after year, indicating implementation gaps
+2. **Strengthen accountability**: {theme_counts.get('accountability', 0)} mentions of accountability suggest enforcement gaps
+3. **Fill capacity gaps**: {theme_counts.get('capacity', 0)} mentions indicate human resource constraints
+4. **Improve monitoring**: Track implementation of previous recommendations before adding new ones
+
+---
+
+*Generated from BRRR Analysis Dashboard | Data: Parliamentary Portfolio Committee Reports (2015-2025)*
+*Repository: github.com/laurencehw/brrr_recs*
+"""
+    
+    # Display the brief
+    st.markdown(brief_content)
+    
+    # Download button
+    st.download_button(
+        "⬇️ Download Policy Brief (Markdown)",
+        brief_content,
+        f"policy_brief_{sector}.md",
+        "text/markdown",
+        key='download-brief'
+    )
+    
+    # Also offer as plain text for easy copying
+    st.text_area("📋 Copy to clipboard", brief_content, height=200)
 
 
 def render_economic_context(econ_df):
