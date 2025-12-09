@@ -302,31 +302,46 @@ To reproduce or update this analysis:
 
 ### Future Enhancements
 
-#### Data Enrichment
-- **Economic Context Data**: Correlate recommendations with GDP, unemployment, inflation, and interest rate trends from Stats SA/SARB
-- **Load-shedding Correlation**: Map energy recommendations against Eskom load-shedding stages over time
+#### ✅ Completed (December 2025)
+
+- **Economic Context Data**: Integrated unemployment, GDP, electricity data (2015-2025) from Stats SA/SARB
+- **Load-shedding Correlation**: Added 944 days of load-shedding data with R2.1 trillion cost estimates
+- **International Benchmarking**: Compare SA with 9 peer economies (BRICS+, emerging markets)
+- **Interactive Dashboard**: Streamlit dashboard with 7 views (hosted on Streamlit Cloud)
+- **NLP Analysis**: Sentiment analysis, urgency detection, entity extraction on 5,256 recommendations
+
+#### 🔜 Next Phase Ideas
+
+**Data & Analysis**
 - **Geographic/Provincial Breakdown**: Map recommendations by province and link to provincial budget allocations
-- **Implementation Tracking**: Add columns tracking which recommendations were implemented and their outcomes
+- **Implementation Tracking**: Connect to Auditor General reports to track which recommendations were actually implemented
+- **Budget Vote Analysis**: Link recommendations to actual Treasury budget vote outcomes
+- **Time-series Forecasting**: Predict future recommendation patterns based on economic indicators
 
-#### International Benchmarking
-- Compare SA recommendations to similar emerging markets (Brazil, India, Indonesia)
-- Integrate World Bank/IMF recommendations for SA
-- Link to Doing Business/investment climate rankings over time
+**International & Policy**
+- **World Bank/IMF Alignment**: Map recommendations to World Bank Article IV consultations and IMF recommendations
+- **NDP Goal Tracking**: Connect recommendations to National Development Plan 2030 targets
+- **AfCFTA Readiness**: Assess trade recommendations against African Continental Free Trade Area requirements
+- **Just Energy Transition**: Map energy recommendations to JET Investment Plan milestones
 
-#### Interactive Visualizations
-- Build a Streamlit/Dash dashboard for interactive exploration
-- Create timeline views correlating crises (energy, fiscal) with recommendations
-- Add Sankey diagrams showing resource flows
+**Technical Enhancements**
+- **Advanced NLP**: Use LLMs to summarize and cluster recommendations by semantic similarity
+- **Recommendation De-duplication**: Identify repeated recommendations across years (same issue, never fixed)
+- **Success Story Extraction**: Identify recommendations that were implemented and had positive outcomes
+- **Alert System**: Flag new recommendations that match historical patterns of non-implementation
 
-#### NLP & Analytics Enhancements
-- Sentiment analysis of recommendations (urgent vs routine)
-- Entity extraction (departments, SOEs, programs mentioned)
-- Topic modeling to discover hidden themes beyond manual categories
+**Visualization**
+- **Sankey Diagrams**: Show flows from recommendations → implementation → outcomes
+- **Network Graphs**: Visualize connections between departments, themes, and recurring issues
+- **Geographic Heat Maps**: Provincial distribution of service delivery recommendations
+- **Timeline Animation**: Animated view of how recommendation patterns change with crises
 
-#### Outcome Linkages
-- Connect to Auditor General reports (implementation audits)
-- Link to Treasury budget vote outcomes
-- Track progress against National Development Plan (NDP) goals
+**Data Sources to Add**
+- Auditor General (AG) audit reports (PFMA compliance)
+- Stats SA quarterly labour force surveys
+- SARB monetary policy statements
+- Treasury Medium Term Budget Policy Statements (MTBPS)
+- Eskom weekly system status reports
 
 ---
 
