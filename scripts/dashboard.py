@@ -378,6 +378,27 @@ def main():
     if view == "Overview":
         st.header("📈 Overview")
         
+        # Project description
+        st.markdown("""
+        ### About This Project
+        
+        This dashboard explores **policy ideas for accelerating economic growth in South Africa** 
+        by systematically analyzing a decade of parliamentary oversight work.
+        
+        **Budget Review and Recommendation Reports (BRRRs)** are annual reports produced by 
+        parliamentary portfolio committees after reviewing each department's budget and performance. 
+        They contain concrete recommendations for improving government effectiveness.
+        
+        We analyzed **50 BRRR reports** from 2015-2025 across 6 priority sectors, extracting 
+        **5,256 actionable recommendations**. These recommendations are enriched with economic 
+        context, scored for feasibility and impact, and benchmarked against peer economies.
+        
+        **The goal:** Identify high-impact, implementable reforms that can drive growth, 
+        reduce unemployment, and improve service delivery in South Africa.
+        """)
+        
+        st.divider()
+        
         col1, col2 = st.columns(2)
         
         with col1:
