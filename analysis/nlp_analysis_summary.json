@@ -1,0 +1,120 @@
+{
+  "total_recommendations": 5256,
+  "sentiment_distribution": {
+    "neutral": 3137,
+    "positive": 1590,
+    "negative": 529
+  },
+  "urgency_distribution": {
+    "low": 4774,
+    "medium": 427,
+    "high": 55
+  },
+  "average_sentiment_score": 0.182,
+  "average_word_count": 62.9,
+  "recommendations_with_monetary_refs": 1033,
+  "total_monetary_referenced": 152340981247882.84,
+  "entity_category_frequency": {
+    "service_delivery": 1216,
+    "fiscal": 1116,
+    "social": 460,
+    "governance": 888,
+    "soe": 357,
+    "financial_management": 774,
+    "economic": 851,
+    "human_resources": 789
+  },
+  "by_department": {
+    "energy": {
+      "sentiment_score": 0.02,
+      "urgency_count": 0.065,
+      "entity_count": 1.258
+    },
+    "finance": {
+      "sentiment_score": 0.251,
+      "urgency_count": 0.507,
+      "entity_count": 6.355
+    },
+    "infrastructure": {
+      "sentiment_score": 0.105,
+      "urgency_count": 0.06,
+      "entity_count": 1.384
+    },
+    "labour": {
+      "sentiment_score": 0.213,
+      "urgency_count": 0.09,
+      "entity_count": 2.155
+    },
+    "science_tech": {
+      "sentiment_score": 0.176,
+      "urgency_count": 0.095,
+      "entity_count": 1.26
+    },
+    "trade": {
+      "sentiment_score": 0.233,
+      "urgency_count": 0.038,
+      "entity_count": 0.985
+    }
+  },
+  "by_year": {
+    "2015": {
+      "sentiment_score": 0.104,
+      "urgency_count": 0.114,
+      "entity_count": 304
+    },
+    "2016": {
+      "sentiment_score": 0.314,
+      "urgency_count": 0.053,
+      "entity_count": 125
+    },
+    "2017": {
+      "sentiment_score": 0.23,
+      "urgency_count": 0.45,
+      "entity_count": 817
+    },
+    "2018": {
+      "sentiment_score": 0.145,
+      "urgency_count": 0.508,
+      "entity_count": 572
+    },
+    "2019": {
+      "sentiment_score": 0.209,
+      "urgency_count": 0.059,
+      "entity_count": 1554
+    },
+    "2020": {
+      "sentiment_score": 0.132,
+      "urgency_count": 0.149,
+      "entity_count": 771
+    },
+    "2021": {
+      "sentiment_score": 0.156,
+      "urgency_count": 0.109,
+      "entity_count": 1339
+    },
+    "2022": {
+      "sentiment_score": 0.133,
+      "urgency_count": 0.134,
+      "entity_count": 1221
+    },
+    "2023": {
+      "sentiment_score": 0.197,
+      "urgency_count": 0.122,
+      "entity_count": 1371
+    },
+    "2024": {
+      "sentiment_score": 0.184,
+      "urgency_count": 0.096,
+      "entity_count": 1472
+    },
+    "2025": {
+      "sentiment_score": 0.241,
+      "urgency_count": 0.182,
+      "entity_count": 1326
+    }
+  },
+  "high_concern_count": 2,
+  "high_concern_departments": {
+    "labour": 2
+  }
+}

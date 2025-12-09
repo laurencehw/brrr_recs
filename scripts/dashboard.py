@@ -73,6 +73,26 @@ def load_prioritization_summary():
     return {}
 
 
+@st.cache_data
+def load_nlp_analysis():
+    """Load NLP analysis summary"""
+    path = ANALYSIS_DIR / "nlp_analysis_summary.json"
+    if path.exists():
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+
+@st.cache_data
+def load_nlp_detailed():
+    """Load detailed NLP analysis"""
+    path = ANALYSIS_DIR / "nlp_analysis_detailed.json"
+    if path.exists():
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return []
+
+
 def create_economic_timeline(econ_df):
     """Create economic indicators timeline chart"""
     fig = make_subplots(
@@ -302,7 +322,7 @@ def main():
     
     view = st.sidebar.radio(
         "Select View",
-        ["Overview", "Economic Context", "Load-Shedding Crisis", "Recommendations", "Correlations"]
+        ["Overview", "Economic Context", "Load-Shedding Crisis", "NLP Analysis", "Recommendations", "Correlations"]
     )
     
     # Key metrics at top
@@ -484,6 +504,110 @@ def main():
             | Trade | 7 | ~916 |
             | **Total** | **50** | **~5,256** |
             """)
+    
+    elif view == "NLP Analysis":
+        st.header("🧠 NLP Analysis")
+        st.markdown("*Natural Language Processing analysis of recommendation text*")
+        
+        nlp_summary = load_nlp_analysis()
+        nlp_detailed = load_nlp_detailed()
+        
+        if nlp_summary:
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                avg_score = nlp_summary.get('average_sentiment_score', 0)
+                sentiment_emoji = "😊" if avg_score > 0.2 else "😐" if avg_score > -0.2 else "😟"
+                st.metric("Avg Sentiment Score", f"{avg_score:.3f} {sentiment_emoji}")
+            
+            with col2:
+                high_concern = nlp_summary.get('high_concern_count', 0)
+                st.metric("High Concern Items", f"{high_concern:,}")
+            
+            with col3:
+                monetary_refs = nlp_summary.get('recommendations_with_monetary_refs', 0)
+                st.metric("With Monetary Refs", f"{monetary_refs:,}")
+            
+            with col4:
+                avg_words = nlp_summary.get('average_word_count', 0)
+                st.metric("Avg Word Count", f"{avg_words:.0f}")
+            
+            st.divider()
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.subheader("📊 Sentiment Distribution")
+                sentiment_dist = nlp_summary.get('sentiment_distribution', {})
+                if sentiment_dist:
+                    fig = px.pie(
+                        values=list(sentiment_dist.values()),
+                        names=[s.capitalize() for s in sentiment_dist.keys()],
+                        color=list(sentiment_dist.keys()),
+                        color_discrete_map={
+                            'positive': '#27ae60',
+                            'neutral': '#95a5a6',
+                            'negative': '#e74c3c'
+                        },
+                        title="Recommendation Sentiment"
+                    )
+                    fig.update_traces(textposition='inside', textinfo='percent+label')
+                    st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                st.subheader("🚨 Urgency Distribution")
+                urgency_dist = nlp_summary.get('urgency_distribution', {})
+                if urgency_dist:
+                    fig = px.pie(
+                        values=list(urgency_dist.values()),
+                        names=[u.capitalize() for u in urgency_dist.keys()],
+                        color=list(urgency_dist.keys()),
+                        color_discrete_map={
+                            'high': '#e74c3c',
+                            'medium': '#f39c12',
+                            'low': '#27ae60'
+                        },
+                        title="Recommendation Urgency"
+                    )
+                    fig.update_traces(textposition='inside', textinfo='percent+label')
+                    st.plotly_chart(fig, use_container_width=True)
+            
+            st.divider()
+            
+            st.subheader("📌 Policy Theme Analysis")
+            entity_freq = nlp_summary.get('entity_category_frequency', {})
+            if entity_freq:
+                # Sort and create bar chart
+                sorted_entities = sorted(entity_freq.items(), key=lambda x: -x[1])
+                fig = px.bar(
+                    x=[e[1] for e in sorted_entities],
+                    y=[e[0].replace('_', ' ').title() for e in sorted_entities],
+                    orientation='h',
+                    labels={'x': 'Mentions', 'y': 'Policy Theme'},
+                    title="Policy Themes in Recommendations"
+                )
+                fig.update_layout(yaxis={'categoryorder': 'total ascending'})
+                fig.update_traces(marker_color='#3498db')
+                st.plotly_chart(fig, use_container_width=True)
+            
+            # High concern departments
+            st.subheader("⚠️ High Concern Departments")
+            high_concern_depts = nlp_summary.get('high_concern_departments', {})
+            if high_concern_depts:
+                st.markdown("*Departments with recommendations flagged as both high urgency AND negative sentiment:*")
+                fig = px.bar(
+                    x=list(high_concern_depts.values()),
+                    y=list(high_concern_depts.keys()),
+                    orientation='h',
+                    labels={'x': 'Count', 'y': 'Department'},
+                    title="Departments with Highest Concern"
+                )
+                fig.update_traces(marker_color='#e74c3c')
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("No high concern departments identified (this is good news!)")
+        else:
+            st.info("NLP analysis not available. Run `python scripts/nlp_analysis.py` to generate.")
     
     elif view == "Correlations":
         st.header("🔗 Correlations Analysis")
