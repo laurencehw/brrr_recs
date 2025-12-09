@@ -34,12 +34,21 @@ ANALYSIS_DIR = BASE_DIR / "analysis"
 
 @st.cache_data
 def load_recommendations():
-    """Load BRRR recommendations"""
+    """Load BRRR recommendations - full file or sample"""
+    # Try full file first
     json_path = ANALYSIS_DIR / "recommendations.json"
     if json_path.exists():
         with open(json_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
         return pd.DataFrame(data)
+    
+    # Fall back to sample (for Streamlit Cloud where full file is gitignored)
+    sample_path = ANALYSIS_DIR / "recommendations_sample.json"
+    if sample_path.exists():
+        with open(sample_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return pd.DataFrame(data)
+    
     return pd.DataFrame()
 
 
@@ -368,11 +377,20 @@ def render_recommendations(recs_df):
     """Render the Recommendations explorer page"""
     
     st.header("📋 Recommendations Explorer")
-    st.markdown("*Browse and filter 5,256 parliamentary recommendations from 2015-2025*")
     
     if recs_df.empty:
         st.warning("Recommendations data not loaded. The file may be excluded from git.")
         return
+    
+    # Check if this is the sample or full dataset
+    total_recs = len(recs_df)
+    is_sample = total_recs < 5000
+    
+    if is_sample:
+        st.markdown(f"*Showing sample of {total_recs:,} recommendations (full dataset: 5,256)*")
+        st.info("📝 This is a sample dataset for demonstration. The full 5,256 recommendations are available in the local version.")
+    else:
+        st.markdown("*Browse and filter 5,256 parliamentary recommendations from 2015-2025*")
     
     # Filters
     col1, col2, col3 = st.columns(3)
