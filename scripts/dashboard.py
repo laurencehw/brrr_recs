@@ -105,6 +105,16 @@ def load_international_benchmark():
 
 
 @st.cache_data
+def load_operation_vulindlela():
+    """Load Operation Vulindlela reform data"""
+    path = ANALYSIS_DIR / "operation_vulindlela.json"
+    if path.exists():
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+
+@st.cache_data
 def load_peer_data():
     """Load peer country data"""
     path = ANALYSIS_DIR / "peer_country_data.csv"
@@ -205,6 +215,7 @@ def main():
     nlp_data = load_nlp_analysis()
     benchmark = load_international_benchmark()
     peer_df = load_peer_data()
+    ov_data = load_operation_vulindlela()
     
     # Sidebar navigation
     st.sidebar.header("📊 Navigation")
@@ -217,6 +228,7 @@ def main():
             "📈 Economic Context",
             "⚡ Electricity Crisis",
             "🌍 International Benchmark",
+            "🎯 Executive Alignment",
             "🧠 NLP Insights",
         ]
     )
@@ -250,6 +262,12 @@ def main():
     # ==========================================================================
     elif view == "🌍 International Benchmark":
         render_international_benchmark(benchmark, peer_df)
+    
+    # ==========================================================================
+    # VIEW: EXECUTIVE ALIGNMENT (Operation Vulindlela)
+    # ==========================================================================
+    elif view == "🎯 Executive Alignment":
+        render_executive_alignment(ov_data, recs_df)
     
     # ==========================================================================
     # VIEW: NLP INSIGHTS
@@ -695,6 +713,174 @@ def render_international_benchmark(benchmark, peer_df):
            'youth_unemployment', 'debt_to_gdp', 'gini_coefficient', 'renewable_energy_pct']
     available = [c for c in cols if c in peer_df.columns]
     st.dataframe(peer_df[available], use_container_width=True)
+
+
+def render_executive_alignment(ov_data, recs_df):
+    """Render the Executive Alignment page - OV vs BRRR analysis"""
+    
+    st.header("🎯 Executive Alignment")
+    st.markdown("*How do Executive reforms align with Parliament's recommendations?*")
+    
+    if not ov_data:
+        st.warning("Operation Vulindlela data not loaded.")
+        return
+    
+    # Context
+    st.markdown(f"""
+    ### Operation Vulindlela
+    **{ov_data['metadata']['meaning']}** — a joint initiative between the Presidency and 
+    National Treasury launched in {ov_data['metadata']['launch_date']} to accelerate structural 
+    reforms and unlock investment.
+    
+    This view compares the Executive's reform priorities with Parliament's BRRR recommendations 
+    to identify areas of convergence and critical gaps.
+    """)
+    
+    st.divider()
+    
+    # Key Statistics
+    stats = ov_data.get('key_statistics', {})
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Total OV Reforms", stats.get('total_ov_reforms_tracked', 24))
+    with col2:
+        st.metric("Completed", stats.get('completed_reforms', 5))
+    with col3:
+        st.metric("In Progress", stats.get('in_progress_reforms', 19))
+    with col4:
+        st.metric("Avg Progress", f"{stats.get('average_progress_pct', 47)}%")
+    
+    st.divider()
+    
+    # Reform Progress by Priority Area
+    st.subheader("📊 Reform Progress by Priority Area")
+    
+    # Collect reform data
+    reform_data = []
+    for phase in ov_data.get('phases', []):
+        for area in phase.get('priority_areas', []):
+            for reform in area.get('reforms', []):
+                reform_data.append({
+                    'Priority Area': f"{area['icon']} {area['name']}",
+                    'Reform': reform['title'][:50] + ('...' if len(reform['title']) > 50 else ''),
+                    'Progress': reform.get('progress_pct', 0),
+                    'Status': reform.get('status', 'in_progress'),
+                    'Full Title': reform['title']
+                })
+    
+    reform_df = pd.DataFrame(reform_data)
+    
+    # Create grouped bar chart
+    fig = px.bar(
+        reform_df, 
+        x='Progress', 
+        y='Reform',
+        color='Priority Area',
+        orientation='h',
+        title='Reform Progress (%)',
+        hover_data=['Full Title']
+    )
+    fig.update_layout(yaxis={'categoryorder': 'total ascending'}, height=600)
+    st.plotly_chart(fig, use_container_width=True)
+    
+    st.divider()
+    
+    # Alignment Matrix
+    st.subheader("🔗 Parliament ↔ Executive Alignment")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("### ✅ Strong Alignment")
+        st.markdown("*Where OV directly addresses BRRR priorities:*")
+        for item in ov_data['alignment_summary'].get('strong_alignment', []):
+            st.success(f"""
+            **{item['brrr_theme']}**  
+            📝 {item['brrr_mentions']} BRRR mentions → 🎯 {item['ov_reforms']} OV reforms  
+            {item['assessment']}
+            """)
+    
+    with col2:
+        st.markdown("### ⚡ Moderate Alignment")
+        st.markdown("*Partial overlap - more could be done:*")
+        for item in ov_data['alignment_summary'].get('moderate_alignment', []):
+            st.warning(f"""
+            **{item['brrr_theme']}**  
+            📝 {item['brrr_mentions']} BRRR mentions → 🎯 {item['ov_reforms']} OV reforms  
+            {item['assessment']}
+            """)
+    
+    st.divider()
+    
+    # Critical Gaps
+    st.subheader("🚨 Critical Gaps")
+    st.markdown("*Parliament repeatedly flags these issues, but they're NOT part of Operation Vulindlela:*")
+    
+    gap_data = ov_data['alignment_summary'].get('gaps', [])
+    cols = st.columns(2)
+    for i, gap in enumerate(gap_data):
+        with cols[i % 2]:
+            st.error(f"""
+            **{gap['brrr_theme']}**  
+            📝 **{gap['brrr_mentions']}** BRRR mentions → 🎯 **0** OV reforms  
+            ⚠️ {gap['assessment']}
+            """)
+    
+    st.divider()
+    
+    # Visualization: Alignment Heatmap
+    st.subheader("📈 Alignment Heatmap")
+    
+    # Build alignment data
+    alignment_data = []
+    for item in ov_data['alignment_summary'].get('strong_alignment', []):
+        alignment_data.append({'Theme': item['brrr_theme'], 'BRRR Mentions': item['brrr_mentions'], 'OV Reforms': item['ov_reforms'], 'Type': 'Strong'})
+    for item in ov_data['alignment_summary'].get('moderate_alignment', []):
+        alignment_data.append({'Theme': item['brrr_theme'], 'BRRR Mentions': item['brrr_mentions'], 'OV Reforms': item['ov_reforms'], 'Type': 'Moderate'})
+    for item in ov_data['alignment_summary'].get('gaps', []):
+        alignment_data.append({'Theme': item['brrr_theme'], 'BRRR Mentions': item['brrr_mentions'], 'OV Reforms': item['ov_reforms'], 'Type': 'Gap'})
+    
+    align_df = pd.DataFrame(alignment_data)
+    
+    fig = px.scatter(
+        align_df,
+        x='BRRR Mentions',
+        y='OV Reforms',
+        size='BRRR Mentions',
+        color='Type',
+        text='Theme',
+        color_discrete_map={'Strong': '#27ae60', 'Moderate': '#f39c12', 'Gap': '#e74c3c'},
+        title='BRRR Mentions vs OV Reforms (size = BRRR frequency)'
+    )
+    fig.update_traces(textposition='top center')
+    fig.update_layout(height=500)
+    st.plotly_chart(fig, use_container_width=True)
+    
+    st.divider()
+    
+    # Key Insight
+    st.subheader("💡 Key Insight")
+    st.markdown("""
+    **The data reveals a significant alignment gap:**
+    
+    While Operation Vulindlela addresses major structural reforms (energy, logistics, water), 
+    it does **not** tackle the governance and accountability issues that Parliament raises 
+    most frequently:
+    
+    | Issue | BRRR Mentions | OV Response |
+    |-------|--------------|-------------|
+    | Procurement Reform | 248 | ❌ Not addressed |
+    | Vacancy Filling | 246 | ❌ Not addressed |
+    | Irregular Expenditure | 221 | ❌ Not addressed |
+    | Consequence Management | 156 | ❌ Not addressed |
+    
+    **Implication:** Structural reforms will be undermined if governance fundamentals 
+    remain broken. A successful reform agenda needs BOTH infrastructure investment AND 
+    public service accountability.
+    
+    **Recommendation:** Expand OV Phase 2 or create a parallel initiative focused on 
+    public financial management and consequence management.
+    """)
 
 
 def render_nlp_insights(nlp_data):

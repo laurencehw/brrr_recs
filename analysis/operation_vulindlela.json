@@ -1,0 +1,380 @@
+{
+  "metadata": {
+    "name": "Operation Vulindlela",
+    "meaning": "Clearing the Way (isiZulu)",
+    "launch_date": "2020-10",
+    "lead_agencies": ["The Presidency", "National Treasury"],
+    "mandate": "Accelerate structural reforms to unlock investment and growth",
+    "report_url": "https://www.stateofthenation.gov.za/operation-vulindlela",
+    "last_updated": "2025-12-08"
+  },
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Core Structural Reforms",
+      "start_year": 2020,
+      "end_year": 2025,
+      "priority_areas": [
+        {
+          "id": "electricity",
+          "name": "Electricity & Energy",
+          "icon": "⚡",
+          "lead_department": "DMRE",
+          "brrr_theme_mapping": ["energy", "soe_governance"],
+          "alignment_strength": "strong",
+          "reforms": [
+            {
+              "id": "elec_001",
+              "title": "Remove licensing threshold for private generation",
+              "description": "Exempt generation up to 100MW from NERSA licensing requirements",
+              "status": "completed",
+              "progress_pct": 100,
+              "completion_date": "2021-08",
+              "impact": "Enabled 1,400+ MW private generation capacity"
+            },
+            {
+              "id": "elec_002",
+              "title": "Renewable Energy IPP Procurement (Bid Windows 5-7)",
+              "description": "Procure new renewable generation capacity through competitive bidding",
+              "status": "in_progress",
+              "progress_pct": 75,
+              "milestones": [
+                {"name": "BW5 completed", "status": "completed", "date": "2021"},
+                {"name": "BW6 completed", "status": "completed", "date": "2022"},
+                {"name": "BW7 in progress", "status": "in_progress"}
+              ]
+            },
+            {
+              "id": "elec_003",
+              "title": "Independent Transmission Projects",
+              "description": "Enable private sector to build and operate transmission infrastructure",
+              "status": "in_progress",
+              "progress_pct": 60,
+              "milestones": [
+                {"name": "Ministerial Determination published", "status": "completed", "date": "2025-06"},
+                {"name": "Enabling regulations gazetted", "status": "completed", "date": "2025-07"},
+                {"name": "First project bids", "status": "pending"}
+              ]
+            },
+            {
+              "id": "elec_004",
+              "title": "Eskom Unbundling",
+              "description": "Separate Eskom into Generation, Transmission (NTCSA), and Distribution entities",
+              "status": "in_progress",
+              "progress_pct": 50,
+              "milestones": [
+                {"name": "NTCSA established", "status": "completed", "date": "2024"},
+                {"name": "Generation separation", "status": "in_progress"},
+                {"name": "Distribution model", "status": "pending"}
+              ]
+            },
+            {
+              "id": "elec_005",
+              "title": "Grid access and wheeling regulations",
+              "description": "Enable third-party access to transmission and distribution networks",
+              "status": "in_progress",
+              "progress_pct": 40
+            }
+          ]
+        },
+        {
+          "id": "freight_logistics",
+          "name": "Freight & Logistics",
+          "icon": "🚂",
+          "lead_department": "DoT / Transnet",
+          "brrr_theme_mapping": ["infrastructure", "soe_governance"],
+          "alignment_strength": "strong",
+          "reforms": [
+            {
+              "id": "freight_001",
+              "title": "Private Sector Participation Framework",
+              "description": "Enable private operators on rail and port infrastructure",
+              "status": "in_progress",
+              "progress_pct": 45,
+              "milestones": [
+                {"name": "RFI released for major PSP projects", "status": "completed", "date": "2025-06"},
+                {"name": "Bidder engagement", "status": "in_progress"},
+                {"name": "Contract awards", "status": "pending"}
+              ]
+            },
+            {
+              "id": "freight_002",
+              "title": "Transnet Recovery Plan",
+              "description": "Stabilize Transnet operations and finances",
+              "status": "in_progress",
+              "progress_pct": 35
+            },
+            {
+              "id": "freight_003",
+              "title": "Port Efficiency Improvements",
+              "description": "Reduce container dwell times and improve turnaround",
+              "status": "in_progress",
+              "progress_pct": 30
+            },
+            {
+              "id": "freight_004",
+              "title": "Rail Slot Allocation Reforms",
+              "description": "Introduce transparent, competitive rail slot allocation",
+              "status": "in_progress",
+              "progress_pct": 25
+            }
+          ]
+        },
+        {
+          "id": "water",
+          "name": "Water Security",
+          "icon": "💧",
+          "lead_department": "DWS",
+          "brrr_theme_mapping": ["service_delivery", "infrastructure"],
+          "alignment_strength": "strong",
+          "reforms": [
+            {
+              "id": "water_001",
+              "title": "National Water Resource Infrastructure Agency (NWRIA)",
+              "description": "Establish dedicated agency for bulk water infrastructure",
+              "status": "in_progress",
+              "progress_pct": 50,
+              "milestones": [
+                {"name": "NWRIA Bill drafted", "status": "completed"},
+                {"name": "Parliamentary process", "status": "in_progress"},
+                {"name": "Agency operational", "status": "pending"}
+              ]
+            },
+            {
+              "id": "water_002",
+              "title": "Non-Revenue Water Reduction",
+              "description": "Reduce water losses in municipal distribution systems",
+              "status": "in_progress",
+              "progress_pct": 30
+            },
+            {
+              "id": "water_003",
+              "title": "Smart Metering Grant",
+              "description": "Support municipalities with smart water meter installation",
+              "status": "in_progress",
+              "progress_pct": 40
+            }
+          ]
+        },
+        {
+          "id": "telecommunications",
+          "name": "Digital & Telecommunications",
+          "icon": "📡",
+          "lead_department": "DCDT / ICASA",
+          "brrr_theme_mapping": ["science_tech", "service_delivery"],
+          "alignment_strength": "moderate",
+          "reforms": [
+            {
+              "id": "telecom_001",
+              "title": "Spectrum Auction (IMT)",
+              "description": "Allocate high-demand spectrum to mobile operators",
+              "status": "completed",
+              "progress_pct": 100,
+              "completion_date": "2022-03",
+              "impact": "R14.4bn raised, 4G/5G coverage expanded"
+            },
+            {
+              "id": "telecom_002",
+              "title": "Digital Transformation Roadmap",
+              "description": "Comprehensive plan for government digitization",
+              "status": "completed",
+              "progress_pct": 100,
+              "completion_date": "2025-06"
+            },
+            {
+              "id": "telecom_003",
+              "title": "Digital Identity System",
+              "description": "Develop secure digital identity infrastructure",
+              "status": "in_progress",
+              "progress_pct": 45
+            },
+            {
+              "id": "telecom_004",
+              "title": "Open Access Regulations",
+              "description": "Enable infrastructure sharing and reduce barriers",
+              "status": "in_progress",
+              "progress_pct": 35
+            }
+          ]
+        },
+        {
+          "id": "visa_system",
+          "name": "Visa & Immigration",
+          "icon": "🛂",
+          "lead_department": "DHA",
+          "brrr_theme_mapping": ["labour", "skills"],
+          "alignment_strength": "moderate",
+          "reforms": [
+            {
+              "id": "visa_001",
+              "title": "E-Visa Rollout",
+              "description": "Expand electronic visa system to more countries",
+              "status": "in_progress",
+              "progress_pct": 70
+            },
+            {
+              "id": "visa_002",
+              "title": "Critical Skills Visa Streamlining",
+              "description": "Reduce processing times for scarce skills",
+              "status": "in_progress",
+              "progress_pct": 50
+            },
+            {
+              "id": "visa_003",
+              "title": "Remote Working Visa",
+              "description": "New visa category for digital nomads",
+              "status": "completed",
+              "progress_pct": 100,
+              "completion_date": "2024"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Expanded Reform Agenda",
+      "start_year": 2025,
+      "end_year": null,
+      "priority_areas": [
+        {
+          "id": "local_government",
+          "name": "Local Government Reform",
+          "icon": "🏛️",
+          "lead_department": "COGTA",
+          "brrr_theme_mapping": ["service_delivery", "governance"],
+          "alignment_strength": "strong",
+          "reforms": [
+            {
+              "id": "local_001",
+              "title": "White Paper on Local Government Review",
+              "description": "Comprehensive review of local government framework",
+              "status": "in_progress",
+              "progress_pct": 25
+            },
+            {
+              "id": "local_002",
+              "title": "Municipal Service Delivery Improvements",
+              "description": "Performance-based financing for water and electricity services",
+              "status": "in_progress",
+              "progress_pct": 20
+            }
+          ]
+        },
+        {
+          "id": "education_skills",
+          "name": "Education & Skills",
+          "icon": "🎓",
+          "lead_department": "DHET",
+          "brrr_theme_mapping": ["skills", "labour", "unemployment"],
+          "alignment_strength": "moderate",
+          "reforms": [
+            {
+              "id": "skills_001",
+              "title": "Skills Pipeline Development",
+              "description": "Align training with labour market needs",
+              "status": "in_progress",
+              "progress_pct": 30
+            },
+            {
+              "id": "skills_002",
+              "title": "TVET System Strengthening",
+              "description": "Improve quality and relevance of vocational training",
+              "status": "in_progress",
+              "progress_pct": 25
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "alignment_summary": {
+    "strong_alignment": [
+      {
+        "brrr_theme": "Energy/Electricity",
+        "brrr_mentions": 423,
+        "ov_reforms": 5,
+        "ov_priority": "electricity",
+        "assessment": "Strong convergence - OV directly addresses BRRR energy concerns"
+      },
+      {
+        "brrr_theme": "Infrastructure/Logistics",
+        "brrr_mentions": 312,
+        "ov_reforms": 4,
+        "ov_priority": "freight_logistics",
+        "assessment": "Strong focus on Transnet/ports but broader infrastructure needs unmet"
+      },
+      {
+        "brrr_theme": "Service Delivery",
+        "brrr_mentions": 559,
+        "ov_reforms": 5,
+        "ov_priority": "water, local_government",
+        "assessment": "Phase 2 significantly expands municipal service reform"
+      }
+    ],
+    "moderate_alignment": [
+      {
+        "brrr_theme": "SOE Governance",
+        "brrr_mentions": 126,
+        "ov_reforms": 2,
+        "ov_priority": "electricity, freight_logistics",
+        "assessment": "OV focuses on specific SOE operations, not governance framework"
+      },
+      {
+        "brrr_theme": "Skills/Unemployment",
+        "brrr_mentions": 400,
+        "ov_reforms": 4,
+        "ov_priority": "visa_system, education_skills",
+        "assessment": "Phase 2 adds skills focus; job creation is outcome not input"
+      },
+      {
+        "brrr_theme": "Digital/Science & Tech",
+        "brrr_mentions": 189,
+        "ov_reforms": 4,
+        "ov_priority": "telecommunications",
+        "assessment": "Good alignment on digital infrastructure"
+      }
+    ],
+    "gaps": [
+      {
+        "brrr_theme": "Procurement Reform",
+        "brrr_mentions": 248,
+        "ov_reforms": 0,
+        "ov_priority": null,
+        "assessment": "CRITICAL GAP - Procurement/SCM reform not an OV priority despite 248 BRRR mentions"
+      },
+      {
+        "brrr_theme": "Irregular Expenditure",
+        "brrr_mentions": 221,
+        "ov_reforms": 0,
+        "ov_priority": null,
+        "assessment": "CRITICAL GAP - Financial misconduct/accountability not addressed by OV"
+      },
+      {
+        "brrr_theme": "Consequence Management",
+        "brrr_mentions": 156,
+        "ov_reforms": 0,
+        "ov_priority": null,
+        "assessment": "GAP - Enforcement and accountability mechanisms outside OV scope"
+      },
+      {
+        "brrr_theme": "Vacancy Filling/HR",
+        "brrr_mentions": 246,
+        "ov_reforms": 0,
+        "ov_priority": null,
+        "assessment": "GAP - Public service HR reform not an OV priority"
+      }
+    ]
+  },
+  "key_statistics": {
+    "total_ov_reforms_tracked": 24,
+    "completed_reforms": 5,
+    "in_progress_reforms": 19,
+    "phase_1_areas": 5,
+    "phase_2_areas": 2,
+    "brrr_themes_with_strong_alignment": 3,
+    "brrr_themes_with_moderate_alignment": 3,
+    "brrr_themes_with_gaps": 4,
+    "average_progress_pct": 47
+  }
+}
