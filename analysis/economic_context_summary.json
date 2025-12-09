@@ -1,0 +1,130 @@
+{
+  "period": "2015-2025",
+  "unemployment": {
+    "min": 25.4,
+    "max": 34.1,
+    "latest": NaN,
+    "trend": "decreasing"
+  },
+  "electricity": {
+    "2015_gwh": 230983.0,
+    "latest_gwh": 155264.0
+  },
+  "key_observations": [
+    "Unemployment rose significantly during COVID-19 (2020-2021)",
+    "Electricity availability declined due to load-shedding crisis",
+    "BRRR recommendations correlate with economic challenges"
+  ],
+  "data_by_year": [
+    {
+      "year": 2015,
+      "unemployment_rate": 25.4,
+      "electricity_gwh": 230983,
+      "gdp_rmillion": 4420792.572445364,
+      "cpi_index": NaN,
+      "manufacturing_index": NaN,
+      "gdp_growth_pct": NaN,
+      "electricity_change_pct": NaN
+    },
+    {
+      "year": 2016,
+      "unemployment_rate": 26.7,
+      "electricity_gwh": 228637,
+      "gdp_rmillion": 4759554.533290742,
+      "cpi_index": NaN,
+      "manufacturing_index": NaN,
+      "gdp_growth_pct": 7.662923679271194,
+      "electricity_change_pct": -1.0156591610637977
+    },
+    {
+      "year": 2017,
+      "unemployment_rate": 27.4,
+      "electricity_gwh": 229670,
+      "gdp_rmillion": 5078190.182748809,
+      "cpi_index": NaN,
+      "manufacturing_index": NaN,
+      "gdp_growth_pct": 6.694652771165188,
+      "electricity_change_pct": 0.45180788761223223
+    },
+    {
+      "year": 2018,
+      "unemployment_rate": 27.1,
+      "electricity_gwh": 231865,
+      "gdp_rmillion": 5363190.43070464,
+      "cpi_index": NaN,
+      "manufacturing_index": NaN,
+      "gdp_growth_pct": 5.612240536481061,
+      "electricity_change_pct": 0.9557190751948497
+    },
+    {
+      "year": 2019,
+      "unemployment_rate": 28.7,
+      "electricity_gwh": 227387,
+      "gdp_rmillion": 5625206.549453776,
+      "cpi_index": NaN,
+      "manufacturing_index": NaN,
+      "gdp_growth_pct": 4.8854524584671655,
+      "electricity_change_pct": -1.9312962284087742
+    },
+    {
+      "year": 2020,
+      "unemployment_rate": 29.2,
+      "electricity_gwh": 216186,
+      "gdp_rmillion": 5562760.2340586325,
+      "cpi_index": NaN,
+      "manufacturing_index": NaN,
+      "gdp_growth_pct": -1.1101159547858286,
+      "electricity_change_pct": -4.925963225690122
+    },
+    {
+      "year": 2021,
+      "unemployment_rate": 34.1,
+      "electricity_gwh": 221038,
+      "gdp_rmillion": 6206842.063562246,
+      "cpi_index": NaN,
+      "manufacturing_index": NaN,
+      "gdp_growth_pct": 11.578457499572782,
+      "electricity_change_pct": 2.244363649820058
+    },
+    {
+      "year": 2022,
+      "unemployment_rate": 33.5,
+      "electricity_gwh": 214943,
+      "gdp_rmillion": 6666580.96377118,
+      "cpi_index": NaN,
+      "manufacturing_index": NaN,
+      "gdp_growth_pct": 7.406969526546647,
+      "electricity_change_pct": -2.75744442132122
+    },
+    {
+      "year": 2023,
+      "unemployment_rate": 32.4,
+      "electricity_gwh": 206321,
+      "gdp_rmillion": 7037674.438357338,
+      "cpi_index": NaN,
+      "manufacturing_index": NaN,
+      "gdp_growth_pct": 5.566473678229156,
+      "electricity_change_pct": -4.011296018014077
+    },
+    {
+      "year": 2024,
+      "unemployment_rate": 32.6,
+      "electricity_gwh": 213454,
+      "gdp_rmillion": 7352449.483551072,
+      "cpi_index": NaN,
+      "manufacturing_index": NaN,
+      "gdp_growth_pct": 4.472713933428341,
+      "electricity_change_pct": 3.4572341157710573
+    },
+    {
+      "year": 2025,
+      "unemployment_rate": NaN,
+      "electricity_gwh": 155264,
+      "gdp_rmillion": NaN,
+      "cpi_index": NaN,
+      "manufacturing_index": NaN,
+      "gdp_growth_pct": 0.0,
+      "electricity_change_pct": -27.261142916038118
+    }
+  ]
+}
