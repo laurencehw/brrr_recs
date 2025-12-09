@@ -1,0 +1,12 @@
+year,days_with_loadshedding,max_stage,total_hours_estimated,severity,period_description,severity_score,estimated_cost_rmillion
+2015,90,3,360,moderate,Second period (Nov 2014 - Feb 2015),29.8,72000
+2016,15,2,30,low,Minimal - recovery period,12.5,6000
+2017,5,2,10,low,Minimal,10.8,2000
+2018,10,2,20,low,Pre-crisis buildup,11.6,4000
+2019,52,6,530,severe,Third and Fourth periods,38.5,106000
+2020,47,4,400,moderate,"COVID-19 reduced demand, then resumption",27.7,80000
+2021,120,4,1100,severe,Fifth period begins (March 2021),39.7,220000
+2022,205,6,2800,critical,Record load shedding year,63.7,560000
+2023,310,6,4500,critical,Sustained crisis,81.0,900000
+2024,85,6,800,moderate,Crisis end - stability returns,44.0,160000
+2025,5,6,50,low,Brief return,30.8,10000
