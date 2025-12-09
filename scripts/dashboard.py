@@ -93,6 +93,25 @@ def load_nlp_detailed():
     return []
 
 
+@st.cache_data
+def load_international_benchmark():
+    """Load international benchmark data"""
+    path = ANALYSIS_DIR / "international_benchmark.json"
+    if path.exists():
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+
+@st.cache_data
+def load_peer_data():
+    """Load peer country data"""
+    path = ANALYSIS_DIR / "peer_country_data.csv"
+    if path.exists():
+        return pd.read_csv(path)
+    return pd.DataFrame()
+
+
 def create_economic_timeline(econ_df):
     """Create economic indicators timeline chart"""
     fig = make_subplots(
@@ -322,7 +341,7 @@ def main():
     
     view = st.sidebar.radio(
         "Select View",
-        ["Overview", "Economic Context", "Load-Shedding Crisis", "NLP Analysis", "Recommendations", "Correlations"]
+        ["Overview", "Economic Context", "Load-Shedding Crisis", "NLP Analysis", "International Benchmark", "Recommendations", "Correlations"]
     )
     
     # Key metrics at top
@@ -608,6 +627,123 @@ def main():
                 st.info("No high concern departments identified (this is good news!)")
         else:
             st.info("NLP analysis not available. Run `python scripts/nlp_analysis.py` to generate.")
+    
+    elif view == "International Benchmark":
+        st.header("🌍 International Benchmarking")
+        st.markdown("*Comparing South Africa with peer emerging markets*")
+        
+        benchmark = load_international_benchmark()
+        peer_df = load_peer_data()
+        
+        if benchmark and not peer_df.empty:
+            # Key comparison metrics
+            col1, col2, col3, col4 = st.columns(4)
+            
+            rankings = benchmark.get('rankings', {})
+            
+            with col1:
+                unemp = rankings.get('unemployment_rate', {})
+                st.metric(
+                    "Unemployment Rank", 
+                    f"#{unemp.get('rank', 'N/A')}/10",
+                    f"{unemp.get('gap', 0):+.1f}% vs peers",
+                    delta_color="inverse"
+                )
+            
+            with col2:
+                growth = rankings.get('gdp_growth_2024', {})
+                st.metric(
+                    "GDP Growth Rank",
+                    f"#{growth.get('rank', 'N/A')}/10",
+                    f"{growth.get('gap', 0):+.1f}% vs peers",
+                    delta_color="normal"
+                )
+            
+            with col3:
+                gini = rankings.get('gini_coefficient', {})
+                st.metric(
+                    "Inequality Rank",
+                    f"#{gini.get('rank', 'N/A')}/10",
+                    f"{gini.get('gap', 0):+.1f} vs peers",
+                    delta_color="inverse"
+                )
+            
+            with col4:
+                renew = rankings.get('renewable_energy_pct', {})
+                st.metric(
+                    "Renewables Rank",
+                    f"#{renew.get('rank', 'N/A')}/10",
+                    f"{renew.get('gap', 0):+.1f}% vs peers",
+                    delta_color="normal"
+                )
+            
+            st.divider()
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.subheader("📊 Key Indicators Comparison")
+                
+                # Unemployment comparison
+                if 'unemployment_rate' in peer_df.columns:
+                    fig = px.bar(
+                        peer_df.sort_values('unemployment_rate', ascending=True),
+                        x='unemployment_rate',
+                        y='country',
+                        orientation='h',
+                        title="Unemployment Rate (%)",
+                        color='unemployment_rate',
+                        color_continuous_scale='RdYlGn_r'
+                    )
+                    fig.update_layout(showlegend=False, coloraxis_showscale=False)
+                    st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                # GDP Growth comparison
+                if 'gdp_growth_2024' in peer_df.columns:
+                    fig = px.bar(
+                        peer_df.sort_values('gdp_growth_2024', ascending=True),
+                        x='gdp_growth_2024',
+                        y='country',
+                        orientation='h',
+                        title="GDP Growth 2024 (%)",
+                        color='gdp_growth_2024',
+                        color_continuous_scale='RdYlGn'
+                    )
+                    fig.update_layout(showlegend=False, coloraxis_showscale=False)
+                    st.plotly_chart(fig, use_container_width=True)
+            
+            st.divider()
+            
+            # Reform lessons
+            st.subheader("📚 Reform Lessons from Peers")
+            
+            reform_lessons = benchmark.get('reform_lessons', {})
+            if reform_lessons:
+                cols = st.columns(3)
+                for i, (country, lesson) in enumerate(reform_lessons.items()):
+                    with cols[i % 3]:
+                        st.markdown(f"**🇻🇳 {country}**" if country == "Vietnam" else
+                                   f"**🇮🇩 {country}**" if country == "Indonesia" else
+                                   f"**🇮🇳 {country}**" if country == "India" else
+                                   f"**🇰🇪 {country}**" if country == "Kenya" else
+                                   f"**🇲🇽 {country}**" if country == "Mexico" else
+                                   f"**🇧🇷 {country}**" if country == "Brazil" else
+                                   f"**{country}**")
+                        st.markdown(f"*{lesson.get('success_area', '')}*")
+                        st.caption(lesson.get('relevance_to_sa', ''))
+            
+            st.divider()
+            
+            # Full data table
+            st.subheader("📋 Full Peer Comparison Data")
+            display_cols = ['country', 'gdp_per_capita_usd', 'gdp_growth_2024', 
+                           'unemployment_rate', 'youth_unemployment', 'debt_to_gdp',
+                           'gini_coefficient', 'renewable_energy_pct']
+            available_cols = [c for c in display_cols if c in peer_df.columns]
+            st.dataframe(peer_df[available_cols], use_container_width=True)
+        else:
+            st.info("Run `python scripts/international_benchmark.py` to generate benchmark data.")
     
     elif view == "Correlations":
         st.header("🔗 Correlations Analysis")
