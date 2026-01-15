@@ -16,6 +16,23 @@ from plotly.subplots import make_subplots
 import json
 from pathlib import Path
 
+# Import enhanced dashboard components
+try:
+    from dashboard_components import (
+        init_session_state,
+        render_faceted_search,
+        render_paginated_dataframe,
+        render_export_options,
+        render_comparison_view,
+        render_network_analysis,
+        render_accessibility_controls,
+        apply_accessibility_styles,
+        render_data_status
+    )
+    COMPONENTS_AVAILABLE = True
+except ImportError:
+    COMPONENTS_AVAILABLE = False
+
 # Page config
 st.set_page_config(
     page_title="SA Economic Reform Dashboard",
@@ -264,12 +281,17 @@ def main():
     # Sidebar navigation
     st.sidebar.header("📊 Navigation")
     
+    # Initialize enhanced session state if components available
+    if COMPONENTS_AVAILABLE:
+        init_session_state()
+
     view = st.sidebar.radio(
         "Select View",
         [
             "🏠 Overview",
-            "📋 Recommendations", 
+            "📋 Recommendations",
             "🔍 Search & Export",
+            "🔄 Compare",
             "📈 Economic Context",
             "⚡ Electricity Crisis",
             "🗺️ Provincial Analysis",
@@ -279,8 +301,13 @@ def main():
             "🌍 International Benchmark",
             "🎯 Executive Alignment",
             "🧠 NLP Insights",
+            "🧬 Advanced Analytics",
         ]
     )
+
+    # Render data status in sidebar
+    if COMPONENTS_AVAILABLE and not recs_df.empty:
+        render_data_status(recs_df, "Recommendations")
     
     # ==========================================================================
     # VIEW: OVERVIEW
@@ -299,6 +326,12 @@ def main():
     # ==========================================================================
     elif view == "🔍 Search & Export":
         render_search_export(recs_df)
+
+    # ==========================================================================
+    # VIEW: COMPARE
+    # ==========================================================================
+    elif view == "🔄 Compare":
+        render_compare_view(recs_df)
     
     # ==========================================================================
     # VIEW: ECONOMIC CONTEXT
@@ -353,6 +386,12 @@ def main():
     # ==========================================================================
     elif view == "🧠 NLP Insights":
         render_nlp_insights(nlp_data)
+
+    # ==========================================================================
+    # VIEW: ADVANCED ANALYTICS
+    # ==========================================================================
+    elif view == "🧬 Advanced Analytics":
+        render_advanced_analytics(recs_df)
     
     # Footer
     st.divider()
@@ -471,93 +510,104 @@ def render_overview(recs_df, econ_df, ls_data):
 
 
 def render_recommendations(recs_df):
-    """Render the Recommendations explorer page"""
-    
+    """Render the Recommendations explorer page with enhanced filtering and pagination"""
+
     st.header("📋 Recommendations Explorer")
-    
+
     if recs_df.empty:
         st.warning("Recommendations data not loaded. The file may be excluded from git.")
         return
-    
+
     # Check if this is the sample or full dataset
     total_recs = len(recs_df)
     is_sample = total_recs < 5000
-    
+
     if is_sample:
         st.markdown(f"*Showing sample of {total_recs:,} recommendations (full dataset: 5,256)*")
         st.info("📝 This is a sample dataset for demonstration. The full 5,256 recommendations are available in the local version.")
     else:
         st.markdown("*Browse and filter 5,256 parliamentary recommendations from 2015-2025*")
-    
-    # Filters
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        sectors = ['All'] + sorted(recs_df['sector'].dropna().unique().tolist())
-        selected_sector = st.selectbox("Sector", sectors)
-    
-    with col2:
-        years = ['All'] + sorted(recs_df['year'].dropna().unique().tolist())
-        selected_year = st.selectbox("Year", years)
-    
-    with col3:
-        search = st.text_input("🔍 Search keywords")
-    
-    # Apply filters
-    filtered = recs_df.copy()
-    if selected_sector != 'All':
-        filtered = filtered[filtered['sector'] == selected_sector]
-    if selected_year != 'All':
-        filtered = filtered[filtered['year'] == selected_year]
-    if search:
-        filtered = filtered[filtered['recommendation'].str.contains(search, case=False, na=False)]
-    
-    st.markdown(f"**Showing {len(filtered):,} of {len(recs_df):,} recommendations**")
-    
+
+    # Use enhanced faceted search if available
+    if COMPONENTS_AVAILABLE:
+        filtered = render_faceted_search(recs_df, key_prefix="recs")
+    else:
+        # Fallback to basic filters
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            sectors = ['All'] + sorted(recs_df['sector'].dropna().unique().tolist())
+            selected_sector = st.selectbox("Sector", sectors)
+
+        with col2:
+            years = ['All'] + sorted(recs_df['year'].dropna().unique().tolist())
+            selected_year = st.selectbox("Year", years)
+
+        with col3:
+            search = st.text_input("🔍 Search keywords")
+
+        # Apply filters
+        filtered = recs_df.copy()
+        if selected_sector != 'All':
+            filtered = filtered[filtered['sector'] == selected_sector]
+        if selected_year != 'All':
+            filtered = filtered[filtered['year'] == selected_year]
+        if search:
+            filtered = filtered[filtered['recommendation'].str.contains(search, case=False, na=False)]
+
+        st.markdown(f"**Showing {len(filtered):,} of {len(recs_df):,} recommendations**")
+
+    st.divider()
+
     # Summary stats
     col1, col2 = st.columns(2)
-    
+
     with col1:
         # By sector
         sector_counts = filtered['sector'].value_counts()
         fig = px.pie(values=sector_counts.values, names=sector_counts.index,
                      title="By Sector")
         st.plotly_chart(fig, use_container_width=True)
-    
+
     with col2:
         # By year
         year_counts = filtered['year'].value_counts().sort_index()
         fig = px.bar(x=year_counts.index, y=year_counts.values,
                      title="By Year", labels={'x': 'Year', 'y': 'Count'})
         st.plotly_chart(fig, use_container_width=True)
-    
-    # Data table
+
+    # Data table with pagination
     st.subheader("📄 Recommendations")
     display_cols = ['year', 'sector', 'category', 'recommendation']
     available = [c for c in display_cols if c in filtered.columns]
-    st.dataframe(filtered[available].head(200), use_container_width=True)
+
+    if COMPONENTS_AVAILABLE:
+        render_paginated_dataframe(filtered, columns=available, page_size=50, key_prefix="recs_table")
+    else:
+        st.dataframe(filtered[available].head(200), use_container_width=True)
 
 
 def render_search_export(recs_df):
-    """Render the Search & Export page"""
-    
+    """Render the Search & Export page with enhanced export options"""
+
     st.header("🔍 Search & Export")
-    st.markdown("*Find specific recommendations and download data*")
-    
+    st.markdown("*Find specific recommendations and download in multiple formats*")
+
     if recs_df.empty:
         st.warning("Recommendations data not loaded.")
         return
-    
+
     # Full-text search
     st.subheader("🔎 Full-Text Search")
-    
+
     col1, col2 = st.columns([3, 1])
     with col1:
-        search_query = st.text_input("Enter search terms (supports multiple words)", 
+        search_query = st.text_input("Enter search terms (supports multiple words)",
                                       placeholder="e.g., procurement irregular expenditure")
     with col2:
         search_type = st.selectbox("Search mode", ["All words (AND)", "Any word (OR)"])
-    
+
+    results = recs_df  # Default to all if no search
     if search_query:
         words = search_query.lower().split()
         if search_type == "All words (AND)":
@@ -569,64 +619,78 @@ def render_search_export(recs_df):
                 lambda x: any(w in str(x) for w in words) if pd.notna(x) else False
             )
         results = recs_df[mask]
-        
+
         st.success(f"Found **{len(results):,}** matching recommendations")
-        
+
         if len(results) > 0:
-            # Show results
-            st.dataframe(
-                results[['year', 'sector', 'category', 'recommendation']].head(100),
-                use_container_width=True,
-                height=400
-            )
-    
+            # Show results with pagination
+            if COMPONENTS_AVAILABLE:
+                render_paginated_dataframe(
+                    results,
+                    columns=['year', 'sector', 'category', 'recommendation'],
+                    page_size=50,
+                    key_prefix="search_results"
+                )
+            else:
+                st.dataframe(
+                    results[['year', 'sector', 'category', 'recommendation']].head(100),
+                    use_container_width=True,
+                    height=400
+                )
+
     st.divider()
-    
-    # Export options
-    st.subheader("📥 Export Data")
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown("**All Recommendations**")
-        csv_all = recs_df.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            "⬇️ Download CSV",
-            csv_all,
-            "brrr_recommendations_all.csv",
-            "text/csv",
-            key='download-all'
-        )
-    
-    with col2:
-        st.markdown("**Filtered Results**")
-        if search_query and len(results) > 0:
-            csv_filtered = results.to_csv(index=False).encode('utf-8')
+
+    # Enhanced export options
+    if COMPONENTS_AVAILABLE:
+        # Export filtered results if search was performed
+        export_df = results if search_query else recs_df
+        render_export_options(export_df, filename_prefix="brrr_recommendations", key_prefix="search_export")
+    else:
+        # Fallback to basic export
+        st.subheader("📥 Export Data")
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.markdown("**All Recommendations**")
+            csv_all = recs_df.to_csv(index=False).encode('utf-8')
             st.download_button(
                 "⬇️ Download CSV",
-                csv_filtered,
-                f"brrr_search_{search_query.replace(' ', '_')[:20]}.csv",
+                csv_all,
+                "brrr_recommendations_all.csv",
                 "text/csv",
-                key='download-filtered'
+                key='download-all'
             )
-        else:
-            st.caption("Search first to filter")
-    
-    with col3:
-        st.markdown("**By Sector**")
-        export_sector = st.selectbox("Select sector", sorted(recs_df['sector'].dropna().unique()))
-        sector_data = recs_df[recs_df['sector'] == export_sector]
-        csv_sector = sector_data.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            f"⬇️ Download {export_sector}",
-            csv_sector,
-            f"brrr_{export_sector}_recommendations.csv",
-            "text/csv",
-            key='download-sector'
-        )
-    
+
+        with col2:
+            st.markdown("**Filtered Results**")
+            if search_query and len(results) > 0:
+                csv_filtered = results.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    "⬇️ Download CSV",
+                    csv_filtered,
+                    f"brrr_search_{search_query.replace(' ', '_')[:20]}.csv",
+                    "text/csv",
+                    key='download-filtered'
+                )
+            else:
+                st.caption("Search first to filter")
+
+        with col3:
+            st.markdown("**By Sector**")
+            export_sector = st.selectbox("Select sector", sorted(recs_df['sector'].dropna().unique()))
+            sector_data = recs_df[recs_df['sector'] == export_sector]
+            csv_sector = sector_data.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                f"⬇️ Download {export_sector}",
+                csv_sector,
+                f"brrr_{export_sector}_recommendations.csv",
+                "text/csv",
+                key='download-sector'
+            )
+
     st.divider()
-    
+
     # Quick stats
     st.subheader("📊 Quick Statistics")
     col1, col2, col3, col4 = st.columns(4)
@@ -1585,6 +1649,376 @@ def render_nlp_insights(nlp_data):
     - Governance/accountability is a cross-cutting concern
     - SOE-related mentions concentrate in energy and transport
     """)
+
+
+def render_compare_view(recs_df):
+    """Render the Compare recommendations view"""
+
+    st.header("🔄 Compare Recommendations")
+    st.markdown("*Compare two recommendations side-by-side*")
+
+    if recs_df.empty:
+        st.warning("Recommendations data not loaded.")
+        return
+
+    if COMPONENTS_AVAILABLE:
+        render_comparison_view(recs_df, key_prefix="main_compare")
+    else:
+        st.info("Install dashboard_components for enhanced comparison features.")
+
+        # Fallback basic comparison
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.subheader("Recommendation 1")
+            idx1 = st.selectbox(
+                "Select first",
+                range(min(len(recs_df), 100)),
+                format_func=lambda i: f"{recs_df.iloc[i].get('year', '')} - {str(recs_df.iloc[i].get('recommendation', ''))[:40]}...",
+                key="compare_1"
+            )
+            if idx1 is not None:
+                rec = recs_df.iloc[idx1]
+                st.markdown(f"**Sector:** {rec.get('sector', 'N/A')}")
+                st.markdown(f"**Year:** {rec.get('year', 'N/A')}")
+                st.markdown(f"**Category:** {rec.get('category', 'N/A')}")
+                st.markdown(f"> {rec.get('recommendation', 'N/A')}")
+
+        with col2:
+            st.subheader("Recommendation 2")
+            idx2 = st.selectbox(
+                "Select second",
+                range(min(len(recs_df), 100)),
+                format_func=lambda i: f"{recs_df.iloc[i].get('year', '')} - {str(recs_df.iloc[i].get('recommendation', ''))[:40]}...",
+                key="compare_2"
+            )
+            if idx2 is not None:
+                rec = recs_df.iloc[idx2]
+                st.markdown(f"**Sector:** {rec.get('sector', 'N/A')}")
+                st.markdown(f"**Year:** {rec.get('year', 'N/A')}")
+                st.markdown(f"**Category:** {rec.get('category', 'N/A')}")
+                st.markdown(f"> {rec.get('recommendation', 'N/A')}")
+
+
+def render_advanced_analytics(recs_df):
+    """Render the Advanced Analytics view with enhanced NLP, feasibility, and correlation analysis"""
+
+    st.header("🧬 Advanced Analytics")
+    st.markdown("*Enhanced analysis using NLP, political feasibility scoring, and correlation analysis*")
+
+    # Check for analysis files
+    analysis_dir = Path(__file__).parent.parent / "analysis"
+
+    # Tabs for different analyses
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "🔤 Enhanced NLP",
+        "📊 Feasibility Scoring",
+        "📈 Correlations",
+        "📋 Implementation Status"
+    ])
+
+    with tab1:
+        render_enhanced_nlp_tab(analysis_dir)
+
+    with tab2:
+        render_feasibility_tab(analysis_dir)
+
+    with tab3:
+        render_correlation_tab(analysis_dir)
+
+    with tab4:
+        render_implementation_tab(analysis_dir)
+
+    # Network visualization at bottom
+    st.divider()
+    st.subheader("🕸️ Recommendation Network")
+
+    if COMPONENTS_AVAILABLE and not recs_df.empty:
+        render_network_analysis(recs_df, key_prefix="adv_network")
+    else:
+        st.info("Network visualization requires dashboard_components and networkx.")
+
+
+def render_enhanced_nlp_tab(analysis_dir):
+    """Render enhanced NLP analysis tab"""
+
+    nlp_path = analysis_dir / "enhanced_nlp_analysis.json"
+
+    if nlp_path.exists():
+        with open(nlp_path, 'r') as f:
+            nlp_data = json.load(f)
+
+        st.subheader("🔤 Enhanced NLP Analysis")
+
+        # Summary metrics
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Documents Analyzed", nlp_data.get('total_analyzed', 'N/A'))
+        with col2:
+            st.metric("spaCy Available", "✅" if nlp_data.get('spacy_available') else "❌")
+        with col3:
+            st.metric("Topic Modeling", "✅" if nlp_data.get('bertopic_available') else "❌")
+
+        # SpaCy entities
+        if 'spacy_analysis' in nlp_data:
+            spacy_data = nlp_data['spacy_analysis']
+
+            st.markdown("### 🏛️ Detected SA Organizations")
+            orgs = spacy_data.get('unique_sa_orgs', [])
+            if orgs:
+                st.markdown(", ".join([f"`{org}`" for org in orgs[:20]]))
+
+            st.markdown("### 📜 Referenced Legislation")
+            laws = spacy_data.get('unique_laws', [])
+            if laws:
+                st.markdown(", ".join([f"`{law}`" for law in laws[:15]]))
+
+        # Topic modeling results
+        if 'topic_modeling' in nlp_data:
+            topic_data = nlp_data['topic_modeling']
+
+            st.markdown("### 🎯 Discovered Topics")
+            st.metric("Number of Topics", topic_data.get('n_topics', 'N/A'))
+
+            topic_words = topic_data.get('topic_words', {})
+            if topic_words:
+                with st.expander("View Topic Keywords"):
+                    for topic_id, words in list(topic_words.items())[:10]:
+                        word_list = ", ".join([w[0] for w in words[:5]])
+                        st.markdown(f"**Topic {topic_id}:** {word_list}")
+
+        # Semantic similarity
+        if 'semantic_analysis' in nlp_data:
+            sem_data = nlp_data['semantic_analysis']
+
+            st.markdown("### 🔗 Semantic Similarity Analysis")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric("Near-Duplicates Found", sem_data.get('duplicates_found', 0))
+            with col2:
+                st.metric("Largest Cluster", sem_data.get('largest_cluster', 0))
+
+    else:
+        st.info("Run `python scripts/enhanced_nlp.py` to generate enhanced NLP analysis.")
+        st.code("python scripts/enhanced_nlp.py", language="bash")
+
+
+def render_feasibility_tab(analysis_dir):
+    """Render political feasibility analysis tab"""
+
+    feas_path = analysis_dir / "feasibility_analysis.json"
+
+    if feas_path.exists():
+        with open(feas_path, 'r') as f:
+            feas_data = json.load(f)
+
+        st.subheader("📊 Political Feasibility Scoring")
+
+        # Distribution
+        dist = feas_data.get('feasibility_distribution', {})
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.markdown("### Feasibility Distribution")
+            if dist:
+                fig = px.pie(
+                    values=list(dist.values()),
+                    names=list(dist.keys()),
+                    color=list(dist.keys()),
+                    color_discrete_map={
+                        'HIGH': '#27ae60',
+                        'MEDIUM': '#f39c12',
+                        'LOW': '#e74c3c',
+                        'VERY_LOW': '#8e44ad'
+                    }
+                )
+                st.plotly_chart(fig, use_container_width=True)
+
+        with col2:
+            st.markdown("### Key Statistics")
+            st.metric("Average Score", f"{feas_data.get('average_score', 0):.2f}")
+            st.metric("High Feasibility", dist.get('HIGH', 0))
+            st.metric("Low Feasibility", dist.get('LOW', 0) + dist.get('VERY_LOW', 0))
+
+        # Top barriers
+        st.markdown("### 🚧 Top Barriers to Implementation")
+        barriers = feas_data.get('top_barriers', {})
+        if barriers:
+            barrier_df = pd.DataFrame([
+                {'Barrier': k, 'Count': v}
+                for k, v in barriers.items()
+            ])
+            fig = px.bar(barrier_df, x='Count', y='Barrier', orientation='h',
+                        color='Count', color_continuous_scale='Reds')
+            fig.update_layout(yaxis={'categoryorder': 'total ascending'}, coloraxis_showscale=False)
+            st.plotly_chart(fig, use_container_width=True)
+
+        # Top enablers
+        st.markdown("### ✅ Top Enablers")
+        enablers = feas_data.get('top_enablers', {})
+        if enablers:
+            enabler_df = pd.DataFrame([
+                {'Enabler': k, 'Count': v}
+                for k, v in enablers.items()
+            ])
+            fig = px.bar(enabler_df, x='Count', y='Enabler', orientation='h',
+                        color='Count', color_continuous_scale='Greens')
+            fig.update_layout(yaxis={'categoryorder': 'total ascending'}, coloraxis_showscale=False)
+            st.plotly_chart(fig, use_container_width=True)
+
+        # Top high-feasibility recommendations
+        high_feas = feas_data.get('high_feasibility_recommendations', [])
+        if high_feas:
+            with st.expander("📋 Top High-Feasibility Recommendations"):
+                for i, rec in enumerate(high_feas[:10], 1):
+                    st.markdown(f"**{i}. [{rec.get('sector', 'N/A')} - {rec.get('year', 'N/A')}]** (Score: {rec.get('total_score', 0):.2f})")
+                    st.caption(rec.get('text', '')[:200])
+
+    else:
+        st.info("Run `python scripts/feasibility_scoring.py` to generate feasibility analysis.")
+        st.code("python scripts/feasibility_scoring.py", language="bash")
+
+
+def render_correlation_tab(analysis_dir):
+    """Render correlation analysis tab"""
+
+    corr_path = analysis_dir / "correlation_analysis.json"
+
+    if corr_path.exists():
+        with open(corr_path, 'r') as f:
+            corr_data = json.load(f)
+
+        st.subheader("📈 Correlation Analysis")
+
+        # Indicator correlations
+        ind_corr = corr_data.get('indicator_correlations', {})
+
+        if ind_corr and not isinstance(ind_corr.get('error'), str):
+            st.markdown("### 📊 Recommendations vs Economic Indicators")
+
+            corr_rows = []
+            for indicator, data in ind_corr.items():
+                if isinstance(data, dict) and 'correlation' in data:
+                    corr_rows.append({
+                        'Indicator': indicator.replace('_', ' ').title(),
+                        'Correlation': data['correlation'],
+                        'Significant': '✅' if data.get('significant') else '❌',
+                        'Interpretation': data.get('interpretation', '')[:100]
+                    })
+
+            if corr_rows:
+                corr_df = pd.DataFrame(corr_rows)
+                st.dataframe(corr_df, use_container_width=True, hide_index=True)
+
+        # Trends
+        trends = corr_data.get('recommendation_trends', {})
+        if trends:
+            st.markdown("### 📈 Recommendation Trends")
+
+            trend_info = trends.get('trend', {})
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Trend Direction", trend_info.get('direction', 'N/A').title())
+            with col2:
+                st.metric("Peak Year", trends.get('peak_year', 'N/A'))
+            with col3:
+                st.metric("Change/Year", f"{trend_info.get('slope', 0):+.1f}")
+
+            # Plot yearly data
+            yearly = trends.get('yearly_data', [])
+            if yearly:
+                yearly_df = pd.DataFrame(yearly)
+                fig = px.bar(yearly_df, x='year', y='count', title='Recommendations by Year',
+                            color='count', color_continuous_scale='Blues')
+                fig.update_layout(coloraxis_showscale=False)
+                st.plotly_chart(fig, use_container_width=True)
+
+        # Recurring themes
+        recurring = corr_data.get('recurring_themes', {})
+        if recurring:
+            st.markdown("### 🔄 Persistent Issues (Recurring Themes)")
+
+            persistent = recurring.get('persistent_themes', [])
+            if persistent:
+                st.warning(f"**{len(persistent)} issues** appear year after year without resolution")
+                st.markdown(", ".join([f"`{t}`" for t in persistent[:10]]))
+
+    else:
+        st.info("Run `python scripts/correlation_analysis.py` to generate correlation analysis.")
+        st.code("python scripts/correlation_analysis.py", language="bash")
+
+
+def render_implementation_tab(analysis_dir):
+    """Render implementation tracking tab"""
+
+    impl_path = analysis_dir / "implementation_analysis.json"
+
+    if impl_path.exists():
+        with open(impl_path, 'r') as f:
+            impl_data = json.load(f)
+
+        st.subheader("📋 Implementation Status Analysis")
+
+        # Summary
+        summary = impl_data.get('detection_summary', {})
+        by_status = summary.get('by_status', {})
+
+        st.markdown("### 📊 Estimated Implementation Status")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if by_status:
+                status_colors = {
+                    'implemented': '#27ae60',
+                    'partial': '#f39c12',
+                    'not_implemented': '#e74c3c',
+                    'superseded': '#95a5a6',
+                    'unknown': '#3498db'
+                }
+                fig = px.pie(
+                    values=list(by_status.values()),
+                    names=[s.replace('_', ' ').title() for s in by_status.keys()],
+                    color=list(by_status.keys()),
+                    color_discrete_map={k: status_colors.get(k, '#95a5a6') for k in by_status.keys()}
+                )
+                st.plotly_chart(fig, use_container_width=True)
+
+        with col2:
+            impl_rate = impl_data.get('implementation_rate_estimate', 0)
+            st.metric("Estimated Implementation Rate", f"{impl_rate:.1f}%")
+            st.metric("High Confidence Detections", summary.get('high_confidence_count', 0))
+
+            st.caption("""
+            **Methodology:** Auto-detection based on keyword matching against known implementations,
+            legislation cross-references, and age-based heuristics.
+            """)
+
+        # High confidence detections
+        high_conf = impl_data.get('high_confidence_detections', [])
+        if high_conf:
+            with st.expander("📋 High-Confidence Detections"):
+                for item in high_conf[:10]:
+                    status = item.get('status', 'unknown')
+                    status_emoji = {'implemented': '✅', 'partial': '🔶', 'not_implemented': '❌'}.get(status, '❓')
+                    st.markdown(f"{status_emoji} **{status.replace('_', ' ').title()}** ({item.get('confidence', 0):.0%} confidence)")
+                    st.caption(item.get('text', '')[:150])
+
+        # Legislation cross-references
+        leg_xref = impl_data.get('legislation_cross_references', [])
+        if leg_xref:
+            with st.expander("📜 Legislation Cross-References"):
+                for item in leg_xref[:10]:
+                    st.markdown(f"**[{item.get('year', 'N/A')} - {item.get('sector', 'N/A')}]**")
+                    st.caption(item.get('text', '')[:100])
+                    related = item.get('related_legislation', [])
+                    for leg in related:
+                        st.caption(f"  → {leg.get('year', '')}: {leg.get('act', '')}")
+
+    else:
+        st.info("Run `python scripts/implementation_tracker.py` to generate implementation analysis.")
+        st.code("python scripts/implementation_tracker.py", language="bash")
 
 
 if __name__ == "__main__":
