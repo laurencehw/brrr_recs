@@ -6,6 +6,7 @@ track patterns over time, and identify predictive indicators.
 """
 
 import json
+import re
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
@@ -20,47 +21,37 @@ except ImportError:
     SCIPY_AVAILABLE = False
 
 
+# Import shared utilities
+from utils import (
+    load_recommendations_df,
+    load_csv_file,
+    load_json_file,
+    save_json_file,
+    convert_for_json,
+    get_analysis_dir
+)
+
+
 # =============================================================================
 # DATA LOADING
 # =============================================================================
 
 def load_recommendations() -> pd.DataFrame:
     """Load recommendations as DataFrame."""
-    recs_path = Path(__file__).parent.parent / "analysis" / "recommendations.json"
-
-    if not recs_path.exists():
-        recs_path = Path(__file__).parent.parent / "analysis" / "recommendations_sample.json"
-
-    if not recs_path.exists():
-        return pd.DataFrame()
-
-    with open(recs_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-        if isinstance(data, list):
-            return pd.DataFrame(data)
-        return pd.DataFrame(data.get('recommendations', []))
+    return load_recommendations_df()
 
 
 def load_economic_context() -> pd.DataFrame:
     """Load economic context data."""
-    path = Path(__file__).parent.parent / "analysis" / "economic_context_with_loadshedding.csv"
-    if path.exists():
-        return pd.read_csv(path)
-
-    path = Path(__file__).parent.parent / "analysis" / "economic_context_annual.csv"
-    if path.exists():
-        return pd.read_csv(path)
-
-    return pd.DataFrame()
+    df = load_csv_file("economic_context_with_loadshedding.csv")
+    if df.empty:
+        df = load_csv_file("economic_context_annual.csv")
+    return df
 
 
 def load_loadshedding_data() -> Dict:
     """Load load-shedding data."""
-    path = Path(__file__).parent.parent / "analysis" / "loadshedding_detailed.json"
-    if path.exists():
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {}
+    return load_json_file("loadshedding_detailed.json")
 
 
 # =============================================================================
@@ -404,7 +395,6 @@ class PredictiveAnalyzer:
                 continue
 
             for theme, pattern in themes.items():
-                import re
                 if re.search(pattern, text, re.I):
                     theme_by_year[theme][year] += 1
 
@@ -525,24 +515,7 @@ def run_correlation_analysis(save_results: bool = True) -> Dict:
 
     # Save results
     if save_results:
-        output_dir = Path(__file__).parent.parent / "analysis"
-        output_dir.mkdir(exist_ok=True)
-
-        output_path = output_dir / "correlation_analysis.json"
-        with open(output_path, 'w', encoding='utf-8') as f:
-            # Handle non-serializable types
-            def convert(obj):
-                if isinstance(obj, (np.integer, np.int64)):
-                    return int(obj)
-                elif isinstance(obj, (np.floating, np.float64)):
-                    return float(obj)
-                elif isinstance(obj, np.ndarray):
-                    return obj.tolist()
-                elif isinstance(obj, pd.Timestamp):
-                    return obj.isoformat()
-                return obj
-
-            json.dump(results, f, indent=2, default=convert)
+        output_path = save_json_file(results, "correlation_analysis.json")
         print(f"\nResults saved to: {output_path}")
 
     return results

@@ -732,6 +732,8 @@ def render_responsive_layout(content_func):
 ### 3.1 Alert/Notification System
 
 ```python
+from datetime import datetime, timedelta
+
 def check_for_alerts():
     """Generate alerts for notable patterns"""
     alerts = []

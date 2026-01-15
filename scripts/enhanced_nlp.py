@@ -36,6 +36,9 @@ except ImportError:
     BERTOPIC_AVAILABLE = False
     print("Warning: BERTopic not available. Install with: pip install bertopic")
 
+# Import shared utilities
+from utils import load_recommendations_json, save_json_file, convert_for_json
+
 
 # =============================================================================
 # DATA LOADING
@@ -43,21 +46,7 @@ except ImportError:
 
 def load_recommendations() -> List[Dict]:
     """Load the BRRR recommendations data."""
-    recs_path = Path(__file__).parent.parent / "analysis" / "recommendations.json"
-
-    if not recs_path.exists():
-        # Try sample file
-        recs_path = Path(__file__).parent.parent / "analysis" / "recommendations_sample.json"
-
-    if not recs_path.exists():
-        print(f"Error: No recommendations file found")
-        return []
-
-    with open(recs_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-        if isinstance(data, list):
-            return data
-        return data.get('recommendations', [])
+    return load_recommendations_json()
 
 
 # =============================================================================
@@ -471,22 +460,7 @@ def run_enhanced_nlp_analysis(save_results: bool = True) -> Dict:
 
     # Save results
     if save_results:
-        output_dir = Path(__file__).parent.parent / "analysis"
-        output_dir.mkdir(exist_ok=True)
-
-        output_path = output_dir / "enhanced_nlp_analysis.json"
-        with open(output_path, 'w', encoding='utf-8') as f:
-            # Convert numpy types for JSON serialization
-            def convert(obj):
-                if isinstance(obj, np.integer):
-                    return int(obj)
-                elif isinstance(obj, np.floating):
-                    return float(obj)
-                elif isinstance(obj, np.ndarray):
-                    return obj.tolist()
-                return obj
-
-            json.dump(results, f, indent=2, default=convert)
+        output_path = save_json_file(results, "enhanced_nlp_analysis.json")
         print(f"\nResults saved to: {output_path}")
 
     return results

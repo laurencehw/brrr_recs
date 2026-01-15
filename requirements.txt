@@ -14,7 +14,7 @@ uvicorn>=0.24.0
 
 # Visualization
 plotly==5.18.0
-kaleido
+kaleido==0.2.1
 
 # Enhanced NLP (optional - install for advanced features)
 # pip install spacy && python -m spacy download en_core_web_sm

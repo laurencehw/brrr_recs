@@ -12,6 +12,9 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 import pandas as pd
 
+# Import shared utilities
+from utils import load_recommendations_json, load_json_file, save_json_file
+
 
 # =============================================================================
 # DATA LOADING
@@ -19,28 +22,12 @@ import pandas as pd
 
 def load_recommendations() -> List[Dict]:
     """Load the BRRR recommendations data."""
-    recs_path = Path(__file__).parent.parent / "analysis" / "recommendations.json"
-
-    if not recs_path.exists():
-        recs_path = Path(__file__).parent.parent / "analysis" / "recommendations_sample.json"
-
-    if not recs_path.exists():
-        return []
-
-    with open(recs_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-        if isinstance(data, list):
-            return data
-        return data.get('recommendations', [])
+    return load_recommendations_json()
 
 
 def load_operation_vulindlela() -> Dict:
     """Load Operation Vulindlela data for alignment checking."""
-    path = Path(__file__).parent.parent / "analysis" / "operation_vulindlela.json"
-    if path.exists():
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {}
+    return load_json_file("operation_vulindlela.json")
 
 
 # =============================================================================
@@ -552,12 +539,7 @@ def run_feasibility_analysis(save_results: bool = True) -> Dict:
 
     # Save results
     if save_results:
-        output_dir = Path(__file__).parent.parent / "analysis"
-        output_dir.mkdir(exist_ok=True)
-
-        output_path = output_dir / "feasibility_analysis.json"
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(results, f, indent=2)
+        output_path = save_json_file(results, "feasibility_analysis.json")
         print(f"\nResults saved to: {output_path}")
 
     return results

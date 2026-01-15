@@ -13,6 +13,9 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 import pandas as pd
 
+# Import shared utilities
+from utils import load_recommendations_json, save_json_file, get_analysis_dir
+
 
 # =============================================================================
 # DATA LOADING
@@ -20,19 +23,7 @@ import pandas as pd
 
 def load_recommendations() -> List[Dict]:
     """Load the BRRR recommendations data."""
-    recs_path = Path(__file__).parent.parent / "analysis" / "recommendations.json"
-
-    if not recs_path.exists():
-        recs_path = Path(__file__).parent.parent / "analysis" / "recommendations_sample.json"
-
-    if not recs_path.exists():
-        return []
-
-    with open(recs_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-        if isinstance(data, list):
-            return data
-        return data.get('recommendations', [])
+    return load_recommendations_json()
 
 
 # =============================================================================
@@ -57,7 +48,7 @@ class ImplementationStatus:
 
     def load_tracking_data(self):
         """Load existing tracking data if available."""
-        path = Path(__file__).parent.parent / "analysis" / "implementation_tracking.json"
+        path = get_analysis_dir() / "implementation_tracking.json"
         if path.exists():
             with open(path, 'r', encoding='utf-8') as f:
                 self.tracking_data = json.load(f)
@@ -72,7 +63,7 @@ class ImplementationStatus:
         """Save tracking data to file."""
         self.tracking_data['last_updated'] = datetime.now().isoformat()
 
-        path = Path(__file__).parent.parent / "analysis" / "implementation_tracking.json"
+        path = get_analysis_dir() / "implementation_tracking.json"
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(self.tracking_data, f, indent=2)
 
@@ -402,12 +393,7 @@ def run_implementation_analysis(save_results: bool = True) -> Dict:
 
     # Save results
     if save_results:
-        output_dir = Path(__file__).parent.parent / "analysis"
-        output_dir.mkdir(exist_ok=True)
-
-        output_path = output_dir / "implementation_analysis.json"
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(results, f, indent=2)
+        output_path = save_json_file(results, "implementation_analysis.json")
         print(f"\nResults saved to: {output_path}")
 
     return results
