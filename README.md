@@ -49,6 +49,10 @@ We identified **5,256 recommendations** and scored them using an algorithmic fra
 ### 3. Source Reports
 * `brrr_reports/` – PDF archive organized by sector (Energy, Finance, Labour, etc.).
 
+### 4. Streamlit app
+* [Live](https://brrrrecs-uup3xffty6rveayrlwjmwb.streamlit.app/)
+
+
 ---
 
 ## 📊 Methodology
