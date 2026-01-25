@@ -11,27 +11,20 @@ from pathlib import Path
 
 import pandas as pd
 
+from utils import clean_text as _clean_text, get_analysis_dir
+
 # Fix Windows console encoding
 if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 # Configuration
-ANALYSIS_DIR = Path("analysis")
-OUTPUT_DIR = Path("analysis")
+ANALYSIS_DIR = get_analysis_dir()
+OUTPUT_DIR = get_analysis_dir()
 
 
 def clean_text(text: str) -> str:
-    """Basic cleaning to fix encoding noise and strip numeric debris."""
-    if not isinstance(text, str):
-        return ""
-    cleaned = (
-        text.encode("utf-8", "ignore")
-        .decode("utf-8", "ignore")
-        .replace("\u00a0", " ")
-        .replace("\ufffd", " ")
-    )
-    cleaned = re.sub(r"\s+", " ", cleaned).strip()
-    return cleaned
+    """Clean text with encoding fix for PDF-extracted content."""
+    return _clean_text(text, fix_encoding=True)
 
 
 def is_numeric_noise(text: str) -> bool:

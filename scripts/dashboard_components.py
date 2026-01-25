@@ -231,7 +231,7 @@ def render_paginated_dataframe(
     Args:
         df: DataFrame to display
         columns: Columns to show (None for all)
-        page_size: Rows per page
+        page_size: Default rows per page (can be changed by user)
         key_prefix: Unique prefix for widget keys
     """
     if df.empty:
@@ -244,29 +244,39 @@ def render_paginated_dataframe(
     else:
         display_cols = df.columns.tolist()
 
+    # Initialize page size in session state if not present
+    page_size_key = f'{key_prefix}_page_size'
+    if page_size_key not in st.session_state:
+        st.session_state[page_size_key] = page_size
+
+    # Get current page size from session state
+    current_page_size = st.session_state[page_size_key]
+
     # Calculate pagination
     total_rows = len(df)
-    total_pages = (total_rows - 1) // page_size + 1
+    total_pages = max(1, (total_rows - 1) // current_page_size + 1)
 
     # Ensure current page is valid
-    if f'{key_prefix}_page' not in st.session_state:
-        st.session_state[f'{key_prefix}_page'] = 0
+    page_key = f'{key_prefix}_page'
+    if page_key not in st.session_state:
+        st.session_state[page_key] = 0
 
-    current_page = st.session_state[f'{key_prefix}_page']
+    current_page = st.session_state[page_key]
     current_page = min(current_page, total_pages - 1)
     current_page = max(current_page, 0)
+    st.session_state[page_key] = current_page  # Update if clamped
 
     # Navigation
     col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 1, 1])
 
     with col1:
         if st.button("⏮️ First", key=f"{key_prefix}_first", disabled=current_page == 0):
-            st.session_state[f'{key_prefix}_page'] = 0
+            st.session_state[page_key] = 0
             st.rerun()
 
     with col2:
         if st.button("◀️ Prev", key=f"{key_prefix}_prev", disabled=current_page == 0):
-            st.session_state[f'{key_prefix}_page'] = current_page - 1
+            st.session_state[page_key] = current_page - 1
             st.rerun()
 
     with col3:
@@ -274,17 +284,17 @@ def render_paginated_dataframe(
 
     with col4:
         if st.button("Next ▶️", key=f"{key_prefix}_next", disabled=current_page >= total_pages - 1):
-            st.session_state[f'{key_prefix}_page'] = current_page + 1
+            st.session_state[page_key] = current_page + 1
             st.rerun()
 
     with col5:
         if st.button("Last ⏭️", key=f"{key_prefix}_last", disabled=current_page >= total_pages - 1):
-            st.session_state[f'{key_prefix}_page'] = total_pages - 1
+            st.session_state[page_key] = total_pages - 1
             st.rerun()
 
     # Calculate slice
-    start_idx = current_page * page_size
-    end_idx = min(start_idx + page_size, total_rows)
+    start_idx = current_page * current_page_size
+    end_idx = min(start_idx + current_page_size, total_rows)
 
     # Display data
     st.dataframe(
@@ -293,14 +303,22 @@ def render_paginated_dataframe(
         height=min(600, (end_idx - start_idx + 1) * 35 + 38)
     )
 
-    # Page size selector
+    # Page size selector with callback to reset page when size changes
     col1, col2 = st.columns([3, 1])
     with col2:
-        new_page_size = st.selectbox(
+        page_size_options = [25, 50, 100, 200]
+        current_index = page_size_options.index(current_page_size) if current_page_size in page_size_options else 1
+
+        def on_page_size_change():
+            # Reset to first page when page size changes
+            st.session_state[page_key] = 0
+
+        st.selectbox(
             "Rows per page",
-            [25, 50, 100, 200],
-            index=[25, 50, 100, 200].index(page_size) if page_size in [25, 50, 100, 200] else 1,
-            key=f"{key_prefix}_page_size"
+            page_size_options,
+            index=current_index,
+            key=page_size_key,
+            on_change=on_page_size_change
         )
 
 
