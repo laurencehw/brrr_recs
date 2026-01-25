@@ -11,21 +11,16 @@ from collections import Counter, defaultdict
 from pathlib import Path
 import pandas as pd
 
+from utils import load_recommendations_json, get_analysis_dir, save_json_file
+
 
 def load_recommendations():
     """Load the BRRR recommendations data."""
-    recs_path = Path(__file__).parent.parent / "analysis" / "recommendations.json"
-    
-    if not recs_path.exists():
-        print(f"Error: {recs_path} not found")
+    data = load_recommendations_json()
+    if not data:
+        print("Error: No recommendations data found")
         return []
-    
-    with open(recs_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-        # Handle both list and dict formats
-        if isinstance(data, list):
-            return data
-        return data.get('recommendations', [])
+    return data
 
 
 # Key economic/policy terms to extract
@@ -320,22 +315,18 @@ def main():
         total_bn = summary['total_monetary_referenced'] / 1_000_000_000
         print(f"Total value referenced: R{total_bn:.2f} billion")
     
-    # Save results
-    output_dir = Path(__file__).parent.parent / "analysis"
+    # Save results using utility functions
+    output_dir = get_analysis_dir()
     output_dir.mkdir(exist_ok=True)
-    
+
     # Save detailed analyses
-    analyses_path = output_dir / "nlp_analysis_detailed.json"
-    with open(analyses_path, 'w', encoding='utf-8') as f:
-        json.dump(analyses, f, indent=2, default=str)
+    analyses_path = save_json_file(analyses, "nlp_analysis_detailed.json")
     print(f"\nDetailed analysis saved to: {analyses_path}")
-    
+
     # Save summary
-    summary_path = output_dir / "nlp_analysis_summary.json"
-    with open(summary_path, 'w', encoding='utf-8') as f:
-        json.dump(summary, f, indent=2, default=str)
+    summary_path = save_json_file(summary, "nlp_analysis_summary.json")
     print(f"Summary saved to: {summary_path}")
-    
+
     # Generate markdown report
     report_path = output_dir / "nlp_analysis_report.md"
     generate_markdown_report(summary, report_path)

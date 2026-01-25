@@ -5,6 +5,7 @@ Common utility functions used across analysis scripts.
 """
 
 import json
+import re
 from pathlib import Path
 from typing import Dict, List, Union, Any
 import pandas as pd
@@ -105,18 +106,27 @@ def convert_for_json(obj: Any) -> Any:
     Returns:
         JSON-serializable version of the object
     """
+    # Handle NaN/None values first
+    if obj is None:
+        return None
+    if isinstance(obj, float) and np.isnan(obj):
+        return None
     if isinstance(obj, (np.integer, np.int64)):
         return int(obj)
     elif isinstance(obj, (np.floating, np.float64)):
+        if np.isnan(obj):
+            return None
         return float(obj)
     elif isinstance(obj, np.ndarray):
-        return obj.tolist()
+        return [convert_for_json(x) for x in obj.tolist()]
     elif isinstance(obj, pd.Timestamp):
         return obj.isoformat()
     elif isinstance(obj, pd.Series):
-        return obj.tolist()
+        return [convert_for_json(x) for x in obj.tolist()]
     elif isinstance(obj, pd.DataFrame):
         return obj.to_dict('records')
+    elif pd.isna(obj):
+        return None
     return obj
 
 
@@ -146,12 +156,13 @@ def save_json_file(data: Any, filename: str, indent: int = 2) -> Path:
 # TEXT PROCESSING HELPERS
 # =============================================================================
 
-def clean_text(text: str) -> str:
+def clean_text(text: str, fix_encoding: bool = False) -> str:
     """
     Clean and normalize text for analysis.
 
     Args:
         text: Raw text string
+        fix_encoding: If True, also fix encoding issues (for PDF-extracted text)
 
     Returns:
         Cleaned text string
@@ -159,11 +170,17 @@ def clean_text(text: str) -> str:
     if not text or not isinstance(text, str):
         return ""
 
-    # Basic normalization
-    text = text.strip()
-    # Remove multiple spaces
-    import re
-    text = re.sub(r'\s+', ' ', text)
+    if fix_encoding:
+        # Fix encoding noise from PDF extraction
+        text = (
+            text.encode("utf-8", "ignore")
+            .decode("utf-8", "ignore")
+            .replace("\u00a0", " ")  # Non-breaking space
+            .replace("\ufffd", " ")  # Replacement character
+        )
+
+    # Normalize whitespace and strip
+    text = re.sub(r'\s+', ' ', text).strip()
     return text
 
 
