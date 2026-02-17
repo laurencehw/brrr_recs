@@ -49,23 +49,40 @@ ANALYSIS_DIR = BASE_DIR / "analysis"
 # DATA LOADING FUNCTIONS
 # =============================================================================
 
+def _load_json(path: Path, default):
+    """Load a JSON file with graceful error handling."""
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError) as e:
+        st.warning(f"Could not load {path.name}: {e}")
+        return default
+
+
+def _load_csv(path: Path) -> pd.DataFrame:
+    """Load a CSV file with graceful error handling."""
+    try:
+        return pd.read_csv(path)
+    except (OSError, pd.errors.ParserError) as e:
+        st.warning(f"Could not load {path.name}: {e}")
+        return pd.DataFrame()
+
+
 @st.cache_data
 def load_recommendations():
     """Load BRRR recommendations - full file or sample"""
     # Try full file first
     json_path = ANALYSIS_DIR / "recommendations.json"
     if json_path.exists():
-        with open(json_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        data = _load_json(json_path, [])
         return pd.DataFrame(data)
-    
+
     # Fall back to sample (for Streamlit Cloud where full file is gitignored)
     sample_path = ANALYSIS_DIR / "recommendations_sample.json"
     if sample_path.exists():
-        with open(sample_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        data = _load_json(sample_path, [])
         return pd.DataFrame(data)
-    
+
     return pd.DataFrame()
 
 
@@ -74,8 +91,7 @@ def load_prioritized_recommendations():
     """Load prioritized recommendations with ROI scores"""
     path = ANALYSIS_DIR / "prioritization_summary.json"
     if path.exists():
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return _load_json(path, {})
     return {}
 
 
@@ -84,10 +100,10 @@ def load_economic_context():
     """Load economic context with load-shedding"""
     path = ANALYSIS_DIR / "economic_context_with_loadshedding.csv"
     if path.exists():
-        return pd.read_csv(path)
+        return _load_csv(path)
     path = ANALYSIS_DIR / "economic_context_annual.csv"
     if path.exists():
-        return pd.read_csv(path)
+        return _load_csv(path)
     return pd.DataFrame()
 
 
@@ -96,8 +112,7 @@ def load_loadshedding_data():
     """Load detailed load-shedding data"""
     json_path = ANALYSIS_DIR / "loadshedding_detailed.json"
     if json_path.exists():
-        with open(json_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return _load_json(json_path, {})
     return {}
 
 
@@ -106,8 +121,7 @@ def load_nlp_analysis():
     """Load NLP analysis summary"""
     path = ANALYSIS_DIR / "nlp_analysis_summary.json"
     if path.exists():
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return _load_json(path, {})
     return {}
 
 
@@ -116,8 +130,7 @@ def load_international_benchmark():
     """Load international benchmark data"""
     path = ANALYSIS_DIR / "international_benchmark.json"
     if path.exists():
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return _load_json(path, {})
     return {}
 
 
@@ -126,8 +139,7 @@ def load_operation_vulindlela():
     """Load Operation Vulindlela reform data"""
     path = ANALYSIS_DIR / "operation_vulindlela.json"
     if path.exists():
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return _load_json(path, {})
     return {}
 
 
@@ -136,7 +148,7 @@ def load_peer_data():
     """Load peer country data"""
     path = ANALYSIS_DIR / "peer_country_data.csv"
     if path.exists():
-        return pd.read_csv(path)
+        return _load_csv(path)
     return pd.DataFrame()
 
 
@@ -145,8 +157,7 @@ def load_provincial_analysis():
     """Load provincial analysis data"""
     path = ANALYSIS_DIR / "provincial_analysis.json"
     if path.exists():
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return _load_json(path, {})
     return {}
 
 
@@ -155,8 +166,7 @@ def load_time_series_analysis():
     """Load time series analysis data"""
     path = ANALYSIS_DIR / "time_series_analysis.json"
     if path.exists():
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return _load_json(path, {})
     return {}
 
 
@@ -165,8 +175,7 @@ def load_committee_performance():
     """Load committee performance data"""
     path = ANALYSIS_DIR / "committee_performance.json"
     if path.exists():
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return _load_json(path, {})
     return {}
 
 
@@ -175,59 +184,23 @@ def load_cost_estimates():
     """Load cost estimates data"""
     path = ANALYSIS_DIR / "cost_estimates.json"
     if path.exists():
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return _load_json(path, {})
     return {}
 
 
 # =============================================================================
-# QUICK WINS / HIGH-ROI RECOMMENDATIONS (hardcoded from analysis)
+# QUICK WINS / HIGH-ROI RECOMMENDATIONS
+# Loaded from analysis/quick_wins_editorial.json so they can be updated
+# without code changes.  Falls back to an empty list if the file is absent.
 # =============================================================================
 
-QUICK_WINS = [
-    {
-        "sector": "Energy",
-        "action": "Expedite grid connection approvals for renewable IPPs",
-        "impact": "Add 2-3GW capacity within 18 months",
-        "feasibility": "High - regulatory change only",
-        "cost": "Low - administrative",
-    },
-    {
-        "sector": "Labour",
-        "action": "Fast-track Skills Development Levy disbursements to SETAs",
-        "impact": "R15bn+ sitting unspent for training",
-        "feasibility": "High - Treasury approval needed",
-        "cost": "Zero - funds already collected",
-    },
-    {
-        "sector": "Finance",
-        "action": "Implement consequence management for irregular expenditure",
-        "impact": "R300bn+ irregular spend needs accountability",
-        "feasibility": "High - existing legal framework",
-        "cost": "Low - enforcement",
-    },
-    {
-        "sector": "Infrastructure",
-        "action": "Clear municipal infrastructure grant backlogs",
-        "impact": "Water/sanitation for 2M+ households",
-        "feasibility": "Medium - capacity constraints",
-        "cost": "Medium - R50bn over 3 years",
-    },
-    {
-        "sector": "Trade",
-        "action": "Reduce port turnaround times to regional benchmarks",
-        "impact": "R50bn+ export value at risk",
-        "feasibility": "Medium - Transnet reform needed",
-        "cost": "Medium - operational + investment",
-    },
-    {
-        "sector": "Science & Tech",
-        "action": "Accelerate broadband spectrum allocation",
-        "impact": "Enable 4IR, reduce data costs 50%+",
-        "feasibility": "High - ICASA decision pending",
-        "cost": "Low - regulatory",
-    },
-]
+@st.cache_data
+def load_quick_wins() -> list:
+    """Load editorially-curated quick wins from the analysis directory."""
+    path = ANALYSIS_DIR / "quick_wins_editorial.json"
+    if path.exists():
+        return _load_json(path, [])
+    return []
 
 HIGH_PRIORITY_THEMES = [
     {
@@ -460,7 +433,7 @@ def render_overview(recs_df, econ_df, ls_data):
     st.subheader("🎯 Top Recommended Actions")
     st.markdown("*High-impact reforms that Parliament has repeatedly called for:*")
     
-    for i, qw in enumerate(QUICK_WINS, 1):
+    for i, qw in enumerate(load_quick_wins(), 1):
         with st.expander(f"**{i}. [{qw['sector']}] {qw['action']}**", expanded=(i <= 3)):
             col1, col2, col3 = st.columns(3)
             with col1:

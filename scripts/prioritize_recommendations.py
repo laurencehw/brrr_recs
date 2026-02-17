@@ -242,13 +242,20 @@ def add_growth_scores(df: pd.DataFrame) -> pd.DataFrame:
         "digital_connectivity": 3,
     }).fillna(2)
 
-    df["fiscal_impact"] = df.get("fiscal_impact", pd.Series(["neutral"] * len(df)))
-    df["savings_window"] = df.get("savings_window", pd.Series(["6-18m"] * len(df)))
-    df["funding_source"] = df.get("funding_source", pd.Series(["reprioritisation"] * len(df)))
-    df["owner"] = df.get("owner", pd.Series(["line_dept"] * len(df)))
-    df["blocker_type"] = df.get("blocker_type", pd.Series(["none"] * len(df)))
-    df["evidence_confidence"] = df.get("evidence_confidence", pd.Series(["medium"] * len(df)))
-    df["inequality_channel"] = df.get("inequality_channel", pd.Series(["none"] * len(df)))
+    # Use explicit column existence checks to avoid index misalignment issues
+    # that arise when DataFrame.get() returns a default Series with a different index.
+    _col_defaults = {
+        "fiscal_impact": "neutral",
+        "savings_window": "6-18m",
+        "funding_source": "reprioritisation",
+        "owner": "line_dept",
+        "blocker_type": "none",
+        "evidence_confidence": "medium",
+        "inequality_channel": "none",
+    }
+    for _col, _default in _col_defaults.items():
+        if _col not in df.columns:
+            df[_col] = _default
 
     fiscal_weight = df["fiscal_impact"].map({
         "savings": 1.0,

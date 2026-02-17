@@ -1,0 +1,44 @@
+[
+  {
+    "sector": "Energy",
+    "action": "Expedite grid connection approvals for renewable IPPs",
+    "impact": "Add 2-3GW capacity within 18 months",
+    "feasibility": "High - regulatory change only",
+    "cost": "Low - administrative"
+  },
+  {
+    "sector": "Labour",
+    "action": "Fast-track Skills Development Levy disbursements to SETAs",
+    "impact": "R15bn+ sitting unspent for training",
+    "feasibility": "High - Treasury approval needed",
+    "cost": "Zero - funds already collected"
+  },
+  {
+    "sector": "Finance",
+    "action": "Implement consequence management for irregular expenditure",
+    "impact": "R300bn+ irregular spend needs accountability",
+    "feasibility": "High - existing legal framework",
+    "cost": "Low - enforcement"
+  },
+  {
+    "sector": "Infrastructure",
+    "action": "Clear municipal infrastructure grant backlogs",
+    "impact": "Water/sanitation for 2M+ households",
+    "feasibility": "Medium - capacity constraints",
+    "cost": "Medium - R50bn over 3 years"
+  },
+  {
+    "sector": "Trade",
+    "action": "Reduce port turnaround times to regional benchmarks",
+    "impact": "R50bn+ export value at risk",
+    "feasibility": "Medium - Transnet reform needed",
+    "cost": "Medium - operational + investment"
+  },
+  {
+    "sector": "Science & Tech",
+    "action": "Accelerate broadband spectrum allocation",
+    "impact": "Enable 4IR, reduce data costs 50%+",
+    "feasibility": "High - ICASA decision pending",
+    "cost": "Low - regulatory"
+  }
+]

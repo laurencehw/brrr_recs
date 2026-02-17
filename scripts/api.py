@@ -21,6 +21,7 @@ from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, Dict, Any
 import json
+import os
 from pathlib import Path
 
 # Setup paths
@@ -36,12 +37,15 @@ _data_store: Dict[str, Any] = {}
 # =============================================================================
 
 def load_json(filename: str):
-    """Load JSON file from analysis directory"""
+    """Load JSON file from analysis directory, returning None on missing or malformed file."""
     path = ANALYSIS_DIR / filename
-    if path.exists():
+    if not path.exists():
+        return None
+    try:
         with open(path, 'r', encoding='utf-8') as f:
             return json.load(f)
-    return None
+    except (json.JSONDecodeError, OSError):
+        return None
 
 
 def load_recommendations():
@@ -85,12 +89,15 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Enable CORS for browser access
-# Note: In production, replace "*" with specific allowed origins
+# CORS: read allowed origins from ALLOWED_ORIGINS env var (comma-separated).
+# Defaults to "*" for local/dev use.  Set ALLOWED_ORIGINS in production.
+_raw_origins = os.getenv("ALLOWED_ORIGINS", "*")
+_allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure specific origins in production
-    allow_credentials=False,  # Disabled when using wildcard origins
+    allow_origins=_allowed_origins,
+    allow_credentials=False,  # Must be False when using wildcard origins
     allow_methods=["GET"],  # Read-only API
     allow_headers=["*"],
 )
