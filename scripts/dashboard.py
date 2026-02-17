@@ -15,6 +15,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import json
 from pathlib import Path
+from typing import Any
 
 # Import enhanced dashboard components
 try:
@@ -49,7 +50,7 @@ ANALYSIS_DIR = BASE_DIR / "analysis"
 # DATA LOADING FUNCTIONS
 # =============================================================================
 
-def _load_json(path: Path, default):
+def _load_json(path: Path, default: Any) -> Any:
     """Load a JSON file with graceful error handling."""
     try:
         with open(path, 'r', encoding='utf-8') as f:
@@ -430,18 +431,19 @@ def render_overview(recs_df, econ_df, ls_data):
     st.divider()
     
     # TOP RECOMMENDED ACTIONS
-    st.subheader("🎯 Top Recommended Actions")
-    st.markdown("*High-impact reforms that Parliament has repeatedly called for:*")
-    
-    for i, qw in enumerate(load_quick_wins(), 1):
-        with st.expander(f"**{i}. [{qw['sector']}] {qw['action']}**", expanded=(i <= 3)):
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.markdown(f"**Impact:** {qw['impact']}")
-            with col2:
-                st.markdown(f"**Feasibility:** {qw['feasibility']}")
-            with col3:
-                st.markdown(f"**Cost:** {qw['cost']}")
+    _quick_wins = load_quick_wins()
+    if _quick_wins:
+        st.subheader("🎯 Top Recommended Actions")
+        st.markdown("*High-impact reforms that Parliament has repeatedly called for:*")
+        for i, qw in enumerate(_quick_wins, 1):
+            with st.expander(f"**{i}. [{qw['sector']}] {qw['action']}**", expanded=(i <= 3)):
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.markdown(f"**Impact:** {qw['impact']}")
+                with col2:
+                    st.markdown(f"**Feasibility:** {qw['feasibility']}")
+                with col3:
+                    st.markdown(f"**Cost:** {qw['cost']}")
     
     st.divider()
     
